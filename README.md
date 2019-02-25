@@ -6,7 +6,7 @@ Matlab code for game
 
 * __Small camerl case variable names__
 
-  Name the varable `nameOfVarable` instead of `NAMEOFVARIABLE` or `nameofvariable`
+  Name the varible `nameOfVarable` instead of `NAMEOFVARIABLE` or `nameofvariable`
 
 * __Space between operators__
 
@@ -18,22 +18,22 @@ Matlab code for game
   
   ```matlab
   var = experssion;
-  while(booleanValue) {
+  while(booleanValue) 
     statement;
-    if(booleanValue) {
+    if(booleanValue) 
       statement;
       ...
-    }
-  }
+    end
+  end
   ```
   Not like this:
     ```matlab
   var = experssion;
-  while(booleanValue) { %That sucks
+  while(booleanValue)  %That sucks
   statement;
-  if(booleanValue) {
+  if(booleanValue) 
   statement;
   ...
-  }
-  } 
+  end % who the fuck knows which branch/loop that end corresponds to? 
+  end
   ```
