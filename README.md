@@ -4,9 +4,9 @@ Matlab code for game
 
 # Formatting Suggestions
 
-* __Small camerl case variable names__
+* __Lower camel case variable names__
 
-  Name the varible `nameOfVarable` instead of `NAMEOFVARIABLE` or `nameofvariable`
+  Name the variable `nameOfVariable` instead of `NAMEOFVARIABLE` or `nameofvariable`
 
 * __Space between operators__
 
@@ -17,23 +17,42 @@ Matlab code for game
   Indent like this:
   
   ```matlab
-  var = experssion;
-  while(booleanValue) 
-    statement;
-    if(booleanValue) 
+  function output = foo(para)
+    % comment
+    var = experssion;
+    while(booleanValue) 
       statement;
-      ...
+      if(booleanValue) 
+        statement;
+        var = experssion;
+        ...
+      end
     end
   end
   ```
   Not like this:
-    ```matlab
+  ```matlab
+  function output = foo(para)
+  % comment
   var = experssion;
-  while(booleanValue)  %That sucks
-  statement;
+  while(booleanValue) 
+  statement;            %That sucks
   if(booleanValue) 
   statement;
+  var = experssion;
   ...
   end % who the fuck knows which branch/loop that end corresponds to? 
   end
+  end
+  ```
+
+* __Rational naming and comment whenever necessary__
+
+  Try to name the variable/function/parameter/attribute in a self explanatory manner. For example, name the attribute of obeject `game` that carrys the number of enemy currently in the screen as `game.enemyInScreen` instead of some random shit like `game.ie`. Never use a single character `a`, `b`, `c` as name, __NEVER, EVER, EVER, EVER, EVER__.
+  
+  If the name is not quite self explanatory, add comment explaining what this variable/function/parameter/attribute is about. For example: 
+  ```matlab
+  function pic2ary(path)
+    % read a picture and convert it to a 3d array
+    implementation...
   ```
