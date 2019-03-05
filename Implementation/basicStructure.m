@@ -25,7 +25,6 @@ function init()
     game.y = 0;  % y coordinate
     game.on = 1; % boolean condition for game status
     
-    figure(1);
     hold on;
     
     axis([-5, 5, -5, 5]); % define scope
