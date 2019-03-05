@@ -1,5 +1,3 @@
-%not working yet 
-
 %% main goes here
 main();
 function main()
@@ -7,8 +5,8 @@ function main()
     init();
     
     while(g.gameOn)
-        %set(g.x, 'XData', g.x + 1);
-        %set(g.y, 'yData', g.y + 1);
+        set(g.ui,'XData',g.x);
+        set(g.ui,'YData',g.y);
         drawnow
     end
     
@@ -27,9 +25,10 @@ function init()
     hold on;
     
     axis([-5, 5, -5, 5]);
-    scatter(g.x, g.y);
+    g.ui = scatter(g.x, g.y);
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
+    drawnow
 end
 
 function pressKey(~, ed)
@@ -39,13 +38,16 @@ function pressKey(~, ed)
             g.gameOn = 0;
         case 'leftarrow'
             g.x = g.x - 1;
+            fprintf("left pressed, gx now %d \n",g.x);
+            return
         case 'rightarrow'
-            g.vx = g.x + 1;
+            g.x = g.x + 1;
+            return
         case 'uparrow'
             g.y = g.y + 1;
+            return
         case 'downarrow'
-            g.y = g.y + 1;
+            g.y = g.y - 1;
+            return
     end
 end
-
-
