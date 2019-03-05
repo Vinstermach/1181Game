@@ -6,7 +6,7 @@ Matlab code for game
 
 * __Lower camel case variable names__
 
-  Name the variable `nameOfVariable` instead of `NAMEOFVARIABLE` or `nameofvariable`
+  Name the variable `nameOfVariable` instead of `NAMEOFVARIABLE`, `nameofvariable` or `name_of_variable`
 
 * __Space between operators__
 
