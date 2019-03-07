@@ -1,5 +1,6 @@
 %% main goes here
 main();
+
 function main()
     global g;
     init();
@@ -16,7 +17,7 @@ function main()
         set(g.ui,'XData',g.x);
         set(g.ui,'YData',g.y);
         imagesc(-g.xLen, -g.yLen, g.bgImg.resized);
-        imagesc(-g.x, -g.y, g.icon.resized);
+        imagesc(g.x, g.y, g.icon.resized);
         drawnow
     end
     
@@ -39,23 +40,22 @@ function init()
     g.icon.size = 0.002;
     g.mainFig = figure('menubar','none',...
                'numbertitle','off');
-          
-    
+              
     hold on;
     axis([-g.xLen, g.xLen, -g.yLen, g.yLen]);
     
     [g.bgImg.raw, g.bgImg.map, g.bgImg.alpha] = imread(g.bgImg.path, g.bgImg.format);
     g.bgImg.resized = imresize(g.bgImg.raw, 0.02);
-    
-    
     [g.icon.raw, g.icon.map, g.icon.alpha] = imread(g.icon.path, g.icon.format);
     g.icon.resized = imresize(g.icon.raw, g.icon.size);
-    
     
     g.ui = scatter(g.x, g.y, 'ro', 'filled');
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
+    set(gca,'xtick',[]); set(gca,'xticklabel',[]);
+    set(gca,'ytick',[]); set(gca,'yticklabel',[]);
     drawnow
+    
 end
 
 function pressKey(~, ed)
