@@ -2,7 +2,8 @@ classdef tank
     properties
         length = 32;
         health = 5;
-        dir = 'down'
+        dir = 'up'
+        oriValue;
         value;
         x;
         y;
@@ -12,12 +13,21 @@ classdef tank
         function obj = tank(X, Y, Path)
             obj.x = X;
             obj.y = Y;
-            obj.value = imread(Path);
+            obj.oriValue = flip(imread(Path) ,1);
+            obj.value = obj.oriValue;
         end
-        
-        %function obj = display()
-            
-        %end
+    end
+    methods (Static)
+        function check(obj)
+            if (obj.dir == "up") 
+                obj.value = obj.oriValue; end
+            if (obj.dir == "down") 
+                obj.value = imrotate(obj.oriValue, 180,'bilinear'); end
+            if (obj.dir == "left") 
+                obj.value = imrotate(obj.oriValue, -90,'bilinear'); end
+            if (obj.dir == "up") 
+                obj.value = imrotate(obj.oriValue, 90,'bilinear'); end
+        end
     end
         
 end

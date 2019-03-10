@@ -1,4 +1,3 @@
-
 %% main goes here
 main();
 
@@ -12,16 +11,18 @@ function main()
     init(); % initlizing
     
     while(game.on)
-        exmRange();
-        pause(0.5);
+        exmStatus();
+        %pause(0.5);
         delete(get(gca,'Children'))
+        %p1.check(p1); p2.check(p2);
         imagesc(-bg.length/2, -bg.length/2, bg.value);
         imagesc(p1.x, p1.y, p1.value);
         imagesc(p2.x, p2.y, p2.value);
+        fprintf(p1.dir);
         drawnow; % update plot
     end
     
-    close(1) % close the figure, otherwise it'll remain in memeory 
+    close(1);
 end
 
 function init()
@@ -34,11 +35,6 @@ function init()
     hold on;
     axis([-bg.length/2, bg.length/2, -bg.length/2, bg.length/2])
     game.mainScreen = plot([-bg.length/2, bg.length/2], [-bg.length/2, bg.length/2]);
-    
-    %bornLocX = randi(bg.scale/2) * bg.multiplier; %random interger
-    %bornLocY = randi(bg.scale/2) * bg.multiplier; 
-    %p1.x = bornLocX; p1.y = bornLocY;
-    %p2.x = -bornLocX; p2.y = -bornLocY;
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
     set(gca,'xtick',[]); set(gca,'xticklabel',[]);
@@ -55,33 +51,33 @@ function pressKey(~, ed)
         % player one
         case 'leftarrow' 
             p1.x = p1.x - bg.multiplier;
-            p1.dir = 'left';
+            p1.dir = "left";
         case 'rightarrow'  
             p1.x = p1.x + bg.multiplier;
-            p1.dir = 'right';
+            p1.dir = "right";
         case 'uparrow' 
             p1.y = p1.y + bg.multiplier;
-            p1.dir = 'up';
+            p1.dir = "up";
         case 'downarrow' 
             p1.y = p1.y - bg.multiplier;
-            p1.dir = 'down';
+            p1.dir = "down";
         % player two
         case 'a' 
             p2.x = p2.x - bg.multiplier;
-            p2.dir = 'left';
+            p2.dir = "left";
         case 'd'  
             p2.x = p2.x + bg.multiplier;
-            p2.dir = 'right';
+            p2.dir = "right";
         case 'w' 
             p2.y = p2.y + bg.multiplier;
-            p2.dir = 'up';
+            p2.dir = "up";
         case 's' 
             p2.y = p2.y - bg.multiplier;
-            p2.dir = 'down';
+            p2.dir = "down";
     end
 end
 
-function exmRange()
+function exmStatus()
     % see if the location of 2 players are inside the map
     global game;
     global bg; global p1; global p2;
@@ -111,4 +107,23 @@ function exmRange()
         p2.y = -bg.length/2;
         end
     end
+    
+    if (p1.dir == "up") 
+        p1.value = p1.oriValue; end
+    if (p1.dir == "down") 
+        p1.value = imrotate(p1.oriValue, 180,'bilinear'); end
+    if (p1.dir == "left") 
+        p1.value = imrotate(p1.oriValue, -90,'bilinear'); end
+    if (p1.dir == "right") 
+        p1.value = imrotate(p1.oriValue, 90,'bilinear'); end
+    
+    if (p2.dir == "up") 
+        p2.value = p2.oriValue; end
+    if (p2.dir == "down") 
+        p2.value = imrotate(p2.oriValue, 180,'bilinear'); end
+    if (p2.dir == "left") 
+        p2.value = imrotate(p2.oriValue, -90,'bilinear'); end
+    if (p2.dir == "right") 
+        p2.value = imrotate(p2.oriValue, 90,'bilinear'); end
+
 end
