@@ -5,7 +5,7 @@ main();
 function main()
     global game;
     global bg; global p1; global p2;
-    bg = background(25, 32, 'resources\basebackground.bmp'); %unmber of units, pixel per unit
+    bg = background(25, 32, 'resources\basebackground.png'); %unmber of units, pixel per unit
     p1 = tank(bg.length/2, bg.length/2, 'resources\tank1.png');
     p2 = tank(-bg.length/2, -bg.length/2, 'resources\tank2.png'); 
     
@@ -13,7 +13,8 @@ function main()
     
     while(game.on)
         exmRange();
-        clf(game.mainScreen);
+        pause(0.5);
+        delete(get(gca,'Children'))
         imagesc(-bg.length/2, -bg.length/2, bg.value);
         imagesc(p1.x, p1.y, p1.value);
         imagesc(p2.x, p2.y, p2.value);

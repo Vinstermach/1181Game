@@ -2,10 +2,7 @@
 main();
 
 function main()
-    g = plot([1, 2], [3, 4]);
-    clf(g)
-    pause(2)
-    g = plot([4, 5], [4, 5]);
+    plot([1, 2], [3, 4])
 end
 
 
