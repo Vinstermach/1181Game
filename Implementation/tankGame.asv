@@ -13,7 +13,6 @@ function main()
     
     while(game.on)
         exmRange();
-        imagesc(-bg.length/2, -bg.length/2, bg.value);
         imagesc(p1.x, p1.y, p1.value);
         imagesc(p2.x, p2.y, p2.value);
         drawnow % update plot
@@ -24,7 +23,6 @@ end
 
 function init()
     global game;
-    game.on = true;
     global bg; global p1; global p2;
     game.UI = figure('menubar','none',...
                'numbertitle','off');
@@ -32,6 +30,7 @@ function init()
     hold on;
     axis([-bg.length/2, bg.length/2, -bg.length/2, bg.length/2])
     game.mainScreen = plot([-bg.length/2, bg.length/2], [-bg.length/2, bg.length/2]);
+    imagesc(-bg.length/2, -bg.length/2, bg.value);
     
     bornLocX = randi(bg.length/2); %random interger
     bornLocY = randi(bg.length/2); 
@@ -50,33 +49,33 @@ function pressKey(~, ed)
     global bg; global p1; global p2;
     switch ed.Key
         case 'q'
-            game.on = 0;
+            game.On = 0;
         % player one
         case 'leftarrow' 
             fprintf('up detected \n');
-            p1.x = p1.x - bg.multiplier;
+            p1.x = p1.x - 1;
             p1.dir = 'left';
         case 'rightarrow'  
-            p1.x = p1.x + bg.multiplier;
+            p1.x = p1.x + 1;
             p1.dir = 'right';
         case 'uparrow' 
-            p1.y = p1.y + bg.multiplier;
+            p1.y = p1.y + 1;
             p1.dir = 'up';
         case 'downarrow' 
-            p1.y = p1.y - bg.multiplier;
+            p1.y = p1.y - 1;
             p1.dir = 'down';
         % player two
         case 'a' 
-            p2.x = p2.x - bg.multiplier;
+            p2.x = p2.x - 1;
             p2.dir = 'left';
         case 'd'  
-            p2.x = p2.x + bg.multiplier;
+            p2.x = p2.x + 1;
             p2.dir = 'right';
         case 'w' 
-            p2.y = p2.y + bg.multiplier;
+            p2.y = p2.y + 1;
             p2.dir = 'up';
         case 's' 
-            p2.y = p2.y - bg.multiplier;
+            p2.y = p2.y - 1;
             p2.dir = 'down';
     end
 end

@@ -4,15 +4,17 @@ classdef background
         multiplier; % the pixel of eaxh unit 
         length;
         path;
+        value;
     end
     
     methods
         function obj = background(Scale, Multiplier, Path) %init
             obj.scale = Scale;
             obj.multiplier = Multiplier;
-            obj.length = scale * multiplier;
+            obj.length = obj.scale * obj.multiplier;
             obj.path = Path;
             
+            obj.value = imread(obj.path);
         end
     end
         
