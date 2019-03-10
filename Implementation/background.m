@@ -1,7 +1,7 @@
 classdef background
     properties
         scale;      % number of units 
-        multiplier; % the pixel of eaxh unit 
+        multiplier; % the pixel of each unit 
         length;
         path;
         value;

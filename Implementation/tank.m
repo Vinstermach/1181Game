@@ -15,9 +15,9 @@ classdef tank
             obj.value = imread(Path);
         end
         
-        function obj = display()
+        %function obj = display()
             
-        end
+        %end
     end
         
 end

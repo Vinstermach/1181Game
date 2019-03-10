@@ -13,10 +13,11 @@ function main()
     
     while(game.on)
         exmRange();
+        clf(game.mainScreen);
         imagesc(-bg.length/2, -bg.length/2, bg.value);
         imagesc(p1.x, p1.y, p1.value);
         imagesc(p2.x, p2.y, p2.value);
-        drawnow % update plot
+        drawnow; % update plot
     end
     
     close(1) % close the figure, otherwise it'll remain in memeory 
@@ -33,16 +34,15 @@ function init()
     axis([-bg.length/2, bg.length/2, -bg.length/2, bg.length/2])
     game.mainScreen = plot([-bg.length/2, bg.length/2], [-bg.length/2, bg.length/2]);
     
-    bornLocX = randi(bg.length/2); %random interger
-    bornLocY = randi(bg.length/2); 
-    p1.x = bornLocX; p1.y = bornLocY;
-    p2.x = -bornLocX; p2.y = -bornLocY;
+    %bornLocX = randi(bg.scale/2) * bg.multiplier; %random interger
+    %bornLocY = randi(bg.scale/2) * bg.multiplier; 
+    %p1.x = bornLocX; p1.y = bornLocY;
+    %p2.x = -bornLocX; p2.y = -bornLocY;
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
     set(gca,'xtick',[]); set(gca,'xticklabel',[]);
     set(gca,'ytick',[]); set(gca,'yticklabel',[]);
     drawnow
-    fprintf('figure crested\n');
 end
 
 function pressKey(~, ed)
@@ -53,7 +53,6 @@ function pressKey(~, ed)
             game.on = 0;
         % player one
         case 'leftarrow' 
-            fprintf('up detected \n');
             p1.x = p1.x - bg.multiplier;
             p1.dir = 'left';
         case 'rightarrow'  
