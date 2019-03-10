@@ -2,6 +2,7 @@ classdef tank
     properties
         length = 32;
         health = 5;
+        dir = 'up'
         x;
         y;
     end

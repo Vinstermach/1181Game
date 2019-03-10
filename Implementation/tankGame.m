@@ -49,21 +49,29 @@ function pressKey(~, ed)
         % player one
         case 'leftarrow' 
             p1.x = p1.x - 1;
+            p1.dir = 'left';
         case 'rightarrow'  
             p1.x = p1.x + 1;
+            p1.dir = 'right';
         case 'uparrow' 
             p1.y = p1.y + 1;
+            p1.dir = 'up';
         case 'downarrow' 
             p1.y = p1.y - 1;
+            p1.dir = 'down';
         % player two
         case 'a' 
             p2.x = p2.x - 1;
+            p2.dir = 'left';
         case 'd'  
             p2.x = p2.x + 1;
+            p2.dir = 'right';
         case 'w' 
             p2.y = p2.y + 1;
+            p2.dir = 'up';
         case 's' 
             p2.y = p2.y - 1;
+            p2.dir = 'down';
     end
 end
 
