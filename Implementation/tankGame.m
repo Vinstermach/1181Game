@@ -12,13 +12,10 @@ function main()
     
     while(game.on)
         exmStatus();
-        %pause(0.5);
         delete(get(gca,'Children'))
-        %p1.check(p1); p2.check(p2);
         imagesc(-bg.length/2, -bg.length/2, bg.value);
         imagesc(p1.x, p1.y, p1.value);
         imagesc(p2.x, p2.y, p2.value);
-        fprintf(p1.dir);
         drawnow; % update plot
     end
     
@@ -61,6 +58,9 @@ function pressKey(~, ed)
         case 'downarrow' 
             p1.y = p1.y - bg.multiplier;
             p1.dir = "down";
+        case '?'
+            p1.fire = 1;
+        
         % player two
         case 'a' 
             p2.x = p2.x - bg.multiplier;
@@ -74,6 +74,8 @@ function pressKey(~, ed)
         case 's' 
             p2.y = p2.y - bg.multiplier;
             p2.dir = "down";
+        case 'e' 
+            p2.fire = 1;
     end
 end
 
@@ -82,27 +84,28 @@ function exmStatus()
     global game;
     global bg; global p1; global p2;
     
-    if (p1.x > bg.length/2)
-        p1.x = bg.length/2;
-    else if (p1.x < -bg.length/2)
-        p1.x = -bg.length/2;
+    borderLoc = bg.length/2;
+    if (p1.x > borderLoc - bg.multiplier)
+        p1.x = borderLoc - bg.multiplier;
+    else if (p1.x < -borderLoc)
+        p1.x = -borderLoc;
         end
     end
-    if (p1.y > bg.length/2)
-        p1.y = bg.length/2;
-    else if (p1.y < -bg.length/2)
-        p1.y = -bg.length/2;
+    if (p1.y > borderLoc - bg.multiplier)
+        p1.y = borderLoc - bg.multiplier;
+    else if (p1.y < -borderLoc)
+        p1.y = - borderLoc;
         end
     end
     
-    if (p2.x > bg.length/2)
-        p2.x = bg.length/2;
+    if (p2.x > bg.length/2 - bg.multiplier)
+        p2.x = bg.length/2 - bg.multiplier;
     else if (p2.x < -bg.length/2)
         p2.x = -bg.length/2;
         end
     end
-    if (p2.y > bg.length/2)
-        p2.y = bg.length/2;
+    if (p2.y > bg.length/2 - bg.multiplier)
+        p2.y = bg.length/2 - bg.multiplier;
     else if (p2.y < -bg.length/2)
         p2.y = -bg.length/2;
         end

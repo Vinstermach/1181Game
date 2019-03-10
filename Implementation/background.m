@@ -17,5 +17,11 @@ classdef background
             obj.value = imread(obj.path);
         end
     end
+    
+    methods (Static)
+        function generateBackground()
+            
+        end
+    end
         
 end

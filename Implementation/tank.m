@@ -3,6 +3,9 @@ classdef tank
         length = 32;
         health = 5;
         dir = 'up'
+        fire = 0;
+        fireCD = 10; %time interval between each shot
+        reload = 0;
         oriValue;
         value;
         x;
@@ -17,6 +20,7 @@ classdef tank
             obj.value = obj.oriValue;
         end
     end
+    
     methods (Static)
         function check(obj)
             if (obj.dir == "up") 
