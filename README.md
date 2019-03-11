@@ -45,6 +45,24 @@ Matlab code for game
   end
   end
   ```
+  
+* __Folding__
+
+  No folding style is required. However, suggesting fold the loop/branch into one single line when it is very short.
+  
+  For example, instead of 
+  ```matlab
+  ...
+  if (booleanValue)
+    var = 1;
+  end
+  ```
+  
+  You can simply do 
+  ```matlab
+  ...
+  if (booleanValue) var = 1; end
+  ```
 
 * __Rational naming and comment whenever necessary__
 
