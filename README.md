@@ -45,6 +45,24 @@ Matlab code for game
   end
   end
   ```
+  
+* __Folding__
+
+  No folding style is required. However, suggesting fold the loop/branch into one single line when it is very short.
+  
+  For example, instead of 
+  ```matlab
+  ...
+  if (booleanValue)
+    var = 1;
+  end
+  ```
+  
+  You can simply do 
+  ```matlab
+  ...
+  if (booleanValue) var = 1; end
+  ```
 
 * __Rational naming and comment whenever necessary__
 
@@ -56,3 +74,23 @@ Matlab code for game
     % read a picture and convert it to a 3d array
     implementation...
   ```
+
+# Using git to commit changes 
+
+* __Get repo__
+
+  Nevigate to the destined folder, then open git command line and type `git clone URL`. Substitute `URL` with repo URL
+  
+* __Upload__
+  
+  Type `git add FILENAME`, substitute `FILENAME` with the file name. 
+  
+  Type `git commit`. If you want to add message then type `git commit -m'MESSAGE'`.
+  
+  Type `git push` to push into master branch.
+  
+* __Sync__ 
+
+  Type `git pull` to sync the local repo with the one on GitHub.
+  
+  Note that `push` is upload local file to GitHub, `pull` is download GitHub file to local. Both will preserve unchanged file, onlt modificed part will be updated.  
