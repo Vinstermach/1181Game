@@ -22,7 +22,8 @@ classdef tank
     end
     
     methods (Static)
-        function check(obj)
+        function checkOri(obj)
+            %non-used function
             if (obj.dir == "up") 
                 obj.value = obj.oriValue; end
             if (obj.dir == "down") 
