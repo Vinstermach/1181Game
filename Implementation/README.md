@@ -1,5 +1,5 @@
-# Questions waiting to be solved 
+# current goal 
 
-1. Add opacity onto image.
-2. Offset image coordinates 
-3. reverse image
+1. Add bullets in game
+2. Count health of tanks 
+3. A better Computer opponent algorithm 
