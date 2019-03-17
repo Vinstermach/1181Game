@@ -77,9 +77,15 @@ Matlab code for game
 
 # Using git to commit changes 
 
-* __Get repo__
+If you're only working on one single file and no one else is working on that, it's okay to use GitHub web version to commit. But if you are collabrating with others on the same file, or modified multiple files, using web version would be a real pain. Thus I really recommand using Git. You can download Git [here](https://git-scm.com/downloads). 
 
-  Nevigate to the destined folder, then open git command line and type `git clone URL`. Substitute `URL` with repo URL
+Note that GitHub is a platform that holds the code, while Git is the core that does the version/source control job. 
+
+* __Get started__
+
+  Set the folder you want to work in. you can simply open that folder in resource explorer (Windows) and right click `select Git Bash Here`. Or if you want to experience that pure Linux feeling, open Git command line and use `cd` command to move to the destination folder. 
+  
+  Then open git bash command line, type `git clone URL` (Substitute `URL` with repo URL). This will download the repo to your local device. 
   
 * __Upload__
   
@@ -93,4 +99,4 @@ Matlab code for game
 
   Type `git pull` to sync the local repo with the one on GitHub.
   
-  Note that `push` is upload local file to GitHub, `pull` is download GitHub file to local. Both will preserve unchanged file, onlt modificed part will be updated.  
+  Note that `push` is upload local file to GitHub, `pull` is download GitHub file to local. Both will preserve unchanged file, only modificed part will be updated.  
