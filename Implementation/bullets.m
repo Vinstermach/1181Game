@@ -23,7 +23,7 @@ classdef bullets < handle
             obj.Xs = [obj.Xs, newBullet.x * obj.bg.multiplier];
         end
         %==================================================================
-        function obj = updateBullets(obj)
+        function obj = updateBullets(obj, opponent)
             obj.Xs = []; obj.Ys = []; % clear coordinates
             outdates = [];  % index of bullets out of date or hit the target
             
@@ -36,7 +36,7 @@ classdef bullets < handle
                 end
                 
                 if obj.listOfBul(i).direction == "up"
-                    obj.listOfBul(i).y = obj.listOfBul(i).y + 1;  
+                    obj.listOfBul(i).y = obj.listOfBul(i).y + 1;
                 elseif obj.listOfBul(i).direction == "down"
                     obj.listOfBul(i).y = obj.listOfBul(i).y - 1;
                 elseif obj.listOfBul(i).direction == "left"
@@ -47,6 +47,7 @@ classdef bullets < handle
                 
                 % calculate absloute coordinates of bullets in the plot
                 offset = obj.bg.multiplier / 2;
+                disp(obj.listOfBul(i).x);
                 obj.Xs = [obj.Xs, obj.listOfBul(i).x * obj.bg.multiplier + offset];
                 obj.Ys = [obj.Ys, obj.listOfBul(i).y * obj.bg.multiplier + offset];
             end
@@ -56,5 +57,3 @@ classdef bullets < handle
         
     end
 end
-
-

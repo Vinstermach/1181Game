@@ -8,9 +8,9 @@ classdef tank < handle
         health = 5;  % max hit could afford
         dir;    % facing direction
         
-        range = 10;  % effective range of bullet
+        range = 12;  % effective range of bullet
         fire = 0;    % whether player press the key to fire
-        fireCD = 7;  % time interval between each shot
+        fireCD = 6;  % time interval between each shot
         countDown = 0;   % CD from last attack
         shells = bullets(10);  % alias of `bullets`
         
@@ -33,10 +33,7 @@ classdef tank < handle
         %==================================================================
         function obj = checkStatus(obj, opponent)
             
-            %translate grid coordinates to plotting coordinates
-            obj.inMapX = obj.x * obj.bg.multiplier;
-            obj.inMapY = obj.y * obj.bg.multiplier;
-            
+            % count down to next shot
             obj.countDown = obj.countDown - 1;
             if (obj.countDown < 0) 
                 obj.countDown = 0; end
@@ -53,19 +50,22 @@ classdef tank < handle
             end
             
             %check if the tank is within game border
-            borderLoc = obj.bg.length/2;
-            if (obj.x > borderLoc - obj.bg.multiplier)
-                obj.x = borderLoc - obj.bg.multiplier;
+            borderLoc = obj.bg.scale/2;
+            if (obj.x > borderLoc - 1)
+                obj.x = borderLoc - 1;
             elseif (obj.x < -borderLoc)
                 obj.x = -borderLoc;
             end
-            if (obj.y > borderLoc - obj.bg.multiplier)
-                obj.y = borderLoc - obj.bg.multiplier;
+            if (obj.y > borderLoc - 1)
+                obj.y = borderLoc - 1;
             elseif (obj.y < -borderLoc)
                 obj.y = - borderLoc;
             end
+            %translate grid coordinates to plotting coordinates
+            obj.inMapX = obj.x * obj.bg.multiplier;
+            obj.inMapY = obj.y * obj.bg.multiplier;
             
-            obj.shells.updateBullets();
+            obj.shells.updateBullets(opponent);
         end
         %==================================================================
         function obj = fireAttempt(obj)

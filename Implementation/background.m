@@ -14,7 +14,6 @@ classdef background < handle
             obj.multiplier = Multiplier;
             obj.length = obj.scale * obj.multiplier;
             obj.path = Path;
-            
             obj.value = imread(obj.path);
         end
 
