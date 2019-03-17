@@ -4,13 +4,16 @@
 main();
 
 function main()
+    % coordinates of tanks are the scale version in the plot
+    % absolute coordinates are denoted by `inMapX` and `inMapY`
+
     global game;
-    game.botMatch = 1; % whether it's pve or pvp
+    game.botMatch = 0; % whether it's pve or pvp
     global bg; global p1; global p2;
     % p1 and p2 are human control, p3 is bot
     bg = background(25, 32, 'resources\basebackground.png'); %unmber of units, pixel per unit
-    p1 = tank(bg.scale/2 - 2, bg.scale/2 - 2, 'resources\tank1.png');
-    p2 = tank(-bg.scale/2 + 1, -bg.scale/2 + 1, 'resources\tank2.png');
+    p1 = tank(bg.scale/2 - 2, bg.scale/2 - 2, 'resources\tank1.png', bg);
+    p2 = tank(-bg.scale/2 + 1, -bg.scale/2 + 1, 'resources\tank2.png', bg);
     p1.dir = "up"; p2.dir = "up";
     
     init(); % initlizing parameters
@@ -21,11 +24,18 @@ function main()
         if game.botMatch
             p2.decision(p1); end
         
-        p1.checkStatus(bg); p2.checkStatus(bg);
+        if  (p1.fire == 1) 
+            p1.fireAttempt(); p1.fire = 0; end
+        if  (p2.fire == 1) 
+            p2.fireAttempt(); p2.fire = 0; end
+            
+        p1.checkStatus(p2); p2.checkStatus(p1);
         
         imagesc(-bg.length/2, -bg.length/2, bg.value);
         imagesc(p1.inMapX, p1.inMapY, p1.value);
         imagesc(p2.inMapX, p2.inMapY, p2.value);
+        scatter(p1.shells.Xs, p1.shells.Ys, p1.shells.dia, p1.shells.color, 'filled');
+        scatter(p2.shells.Xs, p2.shells.Ys, p2.shells.dia, p2.shells.color, 'filled');
         
         drawnow; % update plot
         pause(0.1);
@@ -70,7 +80,7 @@ function pressKey(~, ed)
         case 'downarrow' 
             p1.y = p1.y - 1;
             p1.dir = "down";
-        case '?'
+        case 'l'
             p1.fire = 1;
     end
         
