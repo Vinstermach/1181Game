@@ -1,10 +1,11 @@
-classdef background
+classdef background < handle
     properties
         scale;      % number of units 
         multiplier; % the pixel of each unit 
         length;
         path;
         value;
+        barrierMatrix; %boolean matrix recording where are the blocks
     end
     
     methods
@@ -16,12 +17,7 @@ classdef background
             
             obj.value = imread(obj.path);
         end
-    end
-    
-    methods (Static)
-        function generateBackground()
-            
-        end
+
     end
         
 end

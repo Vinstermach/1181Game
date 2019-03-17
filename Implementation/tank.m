@@ -5,9 +5,11 @@ classdef tank < handle
         dir;
         fire = 0;
         fireCD = 10; %time interval between each shot
-        reload = 0;
+        countDown = 0;
         oriValue;
         value;
+        inMapX;
+        inMapY;
         x;
         y;
     end
@@ -20,8 +22,17 @@ classdef tank < handle
             obj.oriValue = flip(imread(Path) ,1);
             obj.value = obj.oriValue;
         end
+        
+        function obj = checkStatus(obj, bg)
+            
+            %translate grid coordinates to plotting coordinates
+            obj.inMapX = obj.x * bg.multiplier;
+            obj.inMapY = obj.y * bg.multiplier;
+            
+            obj.countDown = obj.countDown - 1;
+            if (obj.countDown < 0) 
+                obj.countDown = 0; end
 
-        function obj = checkOri(obj)
             %make the tank turn towards its direction 
             if (obj.dir == "up") 
                 obj.value = obj.oriValue;
@@ -32,11 +43,9 @@ classdef tank < handle
             elseif (obj.dir == "right") 
                 obj.value = imrotate(obj.oriValue, 90,'bilinear');
             end
-        end
-        
-        function obj = checkBorder(obj, bg)
-            borderLoc = bg.length/2;
             
+            %check if the tank is within game border
+            borderLoc = bg.length/2;
             if (obj.x > borderLoc - bg.multiplier)
                 obj.x = borderLoc - bg.multiplier;
             elseif (obj.x < -borderLoc)
@@ -50,22 +59,22 @@ classdef tank < handle
             end
         end
         
-        function decision(obj, opponent, bg)
-            %hard code this as ai algorithm 
+        function decision(obj, opponent)
+            %hard code this as AI algorithm 
             if (randi([0, 1])) %random move in x or y
                 if (opponent.x > obj.x)
-                    obj.x = obj.x + bg.multiplier;
+                    obj.x = obj.x + 1;
                     obj.dir = "right";
                 elseif (opponent.x < obj.x)
-                    obj.x = obj.x - bg.multiplier;
+                    obj.x = obj.x - 1;
                     obj.dir = "left";
                 end  
             else
                 if (opponent.y > obj.y)
-                    obj.y = obj.y + bg.multiplier;
+                    obj.y = obj.y + 1;
                     obj.dir = "up";
                 elseif (opponent.y < obj.y)
-                    obj.y = obj.y - bg.multiplier;
+                    obj.y = obj.y - 1;
                     obj.dir = "down";
                 end  
             end
