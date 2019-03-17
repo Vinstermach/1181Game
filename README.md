@@ -66,7 +66,7 @@ Matlab code for game
 
 * __Rational naming and comment whenever necessary__
 
-  Try to name the variable/function/parameter/attribute in a self explanatory manner. For example, name the attribute of obeject `game` that carrys the number of enemy currently in the screen as `game.enemyInScreen` instead of some random shit like `game.ie`. Never use a single character `a`, `b`, `c` as name, __NEVER, EVER, EVER, EVER, EVER__.
+  Try to name the variable/function/parameter/attribute in a self explanatory manner. For example, name the attribute of obeject `game` that carrys the number of enemy currently in the screen as `game.enemyInScreen` instead of some random shit like `game.ie`. Never use a single character non-related to the variable itself like `a`, `b`, `c` as name, __NEVER, EVER, EVER, EVER, EVER__.
   
   If the name is not quite self explanatory, add comment explaining what this variable/function/parameter/attribute is about. For example: 
   ```matlab
