@@ -12,8 +12,8 @@ function main()
     global bg; global p1; global p2;
     % p1 and p2 are human control, p3 is bot
     bg = background(16, 32, 'resources\basebackgroundAlt.png'); %unmber of units, pixel per unit
-    p1 = tank(bg.scale/2 - 2, bg.scale/2 - 2, 'resources\tank1.png', bg);
-    p2 = tank(-bg.scale/2 + 1, -bg.scale/2 + 1, 'resources\tank2.png', bg);
+    p1 = tank(bg.scale - 2, bg.scale - 2, 'resources\tank1.png', bg);
+    p2 = tank(1, 1, 'resources\tank2.png', bg);
     p1.dir = "up"; p2.dir = "up";
     
     init(); % initlizing parameters
@@ -31,7 +31,7 @@ function main()
             
         p1.checkStatus(p2); p2.checkStatus(p1);
         
-        imagesc(-bg.length/2, -bg.length/2, bg.value);
+        imagesc(0, 0, bg.value);
         imagesc(p1.inMapX, p1.inMapY, p1.value);
         imagesc(p2.inMapX, p2.inMapY, p2.value);
         scatter(p1.shells.Xs, p1.shells.Ys, p1.shells.dia, p1.shells.color, 'filled');
@@ -53,8 +53,8 @@ function init()
                'numbertitle','off');
            
     hold on;
-    axis([-bg.length/2, bg.length/2, -bg.length/2, bg.length/2])
-    game.mainScreen = plot([-bg.length/2, bg.length/2], [-bg.length/2, bg.length/2]);
+    axis([0, bg.length, 0, bg.length])
+    game.mainScreen = plot([0, bg.length], [0, bg.length]);
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
     set(gca,'xtick',[]); set(gca,'xticklabel',[]);

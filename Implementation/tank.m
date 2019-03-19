@@ -50,16 +50,16 @@ classdef tank < handle
             end
             
             %check if the tank is within game border
-            borderLoc = obj.bg.scale/2;
+            borderLoc = obj.bg.scale;
             if (obj.x > borderLoc - 1)
                 obj.x = borderLoc - 1;
-            elseif (obj.x < -borderLoc)
-                obj.x = -borderLoc;
+            elseif (obj.x < 0)
+                obj.x = 0;
             end
             if (obj.y > borderLoc - 1)
                 obj.y = borderLoc - 1;
-            elseif (obj.y < -borderLoc)
-                obj.y = - borderLoc;
+            elseif (obj.y < 0)
+                obj.y = 0;
             end
             %translate grid coordinates to plotting coordinates
             obj.inMapX = obj.x * obj.bg.multiplier;
