@@ -8,7 +8,7 @@ function main()
     % absolute coordinates are denoted by `inMapX` and `inMapY`
 
     global game;
-    game.botMatch = 0; % whether it's pve or pvp
+    game.botMatch = 1; % whether it's pve or pvp
     global bg; global p1; global p2;
     % p1 and p2 are human control, p3 is bot
     bg = background(16, 32); %unmber of units, pixel per unit
@@ -30,6 +30,8 @@ function main()
             p2.fireAttempt(); p2.fire = 0; end
             
         p1.checkStatus(p2); p2.checkStatus(p1);
+        p2.histX = p2.x; p2.histY = p2.y;
+        p1.histX = p1.x; p1.histY = p1.y;
         
         imagesc(0, 0, bg.value);
         imagesc(p1.inMapX, p1.inMapY, p1.value);
@@ -37,7 +39,8 @@ function main()
         scatter(p1.shells.Xs, p1.shells.Ys, p1.shells.dia, p1.shells.color, 'filled');
         scatter(p2.shells.Xs, p2.shells.Ys, p2.shells.dia, p2.shells.color, 'filled');
         
-        disp(p1.x);
+        %fprintf('Current Barrier: %d', p2.bg.barrierMatrix(p2.y+1, p2.x+1));
+        
         drawnow; % update plot
         pause(0.1);
     end
@@ -76,7 +79,7 @@ function pressKey(~, ed)
         case 'rightarrow'  
             p1.x = p1.x + 1;
             p1.dir = "right";
-        case 'uparrow' 
+        case 'uparrow'             
             p1.y = p1.y + 1;
             p1.dir = "up";
         case 'downarrow' 
@@ -85,9 +88,10 @@ function pressKey(~, ed)
         case 'l'
             p1.fire = 1;
     end
-        
+    
     % player two
     if (~ game.botMatch)
+        
         switch ed.Key
             case 'a' 
                 p2.x = p2.x - 1;
@@ -98,7 +102,7 @@ function pressKey(~, ed)
             case 'w' 
                 p2.y = p2.y + 1;
                 p2.dir = "up";
-            case 's' 
+            case 's'                 
                 p2.y = p2.y - 1;
                 p2.dir = "down";
             case 'e' 

@@ -7,6 +7,7 @@ classdef background < handle
         grassImg;
         value;       % the final image
         grassMatrix; % boolean matrix recording where are the blocks
+        barriers;
     end
     
     methods
@@ -16,7 +17,6 @@ classdef background < handle
             obj.length = obj.scale * obj.multiplier;
             obj.grassPath = 'resources\Grass.png';
             obj.grassImg = imread(obj.grassPath);
-            imshow(obj.grassImg);
             obj.readArray();
             obj.generateImage();
         end
@@ -37,6 +37,8 @@ classdef background < handle
                 rowStart = rowEnd + 1;
             end
             obj.value = img;
+            
+            obj.barriers = obj.grassMatrix;
         end
         %=================================================================
         function obj = readArray(obj)

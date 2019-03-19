@@ -18,6 +18,8 @@ classdef tank < handle
         inMapY;
         x;           % relative coordintes in the plot
         y;
+        histX;       % history coordinate, used to restore location
+        histY;
     end
     
     methods
@@ -60,6 +62,11 @@ classdef tank < handle
                 obj.y = borderLoc - 1;
             elseif (obj.y < 0)
                 obj.y = 0;
+            end
+            
+            if (obj.bg.barriers(obj.y+1, obj.x+1) == 1)
+                obj.x = obj.histX;
+                obj.y = obj.histY;
             end
             %translate grid coordinates to plotting coordinates
             obj.inMapX = obj.x * obj.bg.multiplier;
