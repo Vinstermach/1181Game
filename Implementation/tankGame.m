@@ -11,7 +11,7 @@ function main()
     game.botMatch = 0; % whether it's pve or pvp
     global bg; global p1; global p2;
     % p1 and p2 are human control, p3 is bot
-    bg = background(16, 32, 'resources\basebackgroundAlt.png'); %unmber of units, pixel per unit
+    bg = background(16, 32); %unmber of units, pixel per unit
     p1 = tank(bg.scale - 2, bg.scale - 2, 'resources\tank1.png', bg);
     p2 = tank(1, 1, 'resources\tank2.png', bg);
     p1.dir = "up"; p2.dir = "up";
@@ -45,6 +45,7 @@ function main()
     close(1);
 end
 
+%% Other Functions
 function init()
     global game;
     game.on = true;
