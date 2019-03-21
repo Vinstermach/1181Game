@@ -1,5 +1,5 @@
-# current goal 
+# Current goal of game implementation  
 
-1. Add bullets in game
-2. Count health of tanks 
-3. A better Computer opponent algorithm 
+1. Count health of tanks 
+2. A better Computer opponent algorithm 
+3. Brick interaction
