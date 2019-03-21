@@ -100,3 +100,11 @@ Note that GitHub is a platform that holds the code, while Git is the core that d
   Type `git pull` to sync the local repo with the one on GitHub.
   
   Note that `push` is upload local file to GitHub, `pull` is download GitHub file to local. Both will preserve unchanged file, only modificed part will be updated.  
+
+# Current goal in general 
+
+1. Develop in game purchases system;
+2. Develop the main website of the game, in which the purchases will be processed (and redirected);
+3. Documentation, flowchart etc.;
+
+
