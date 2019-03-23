@@ -47,7 +47,6 @@ classdef bullets < handle
                 
                 % calculate absloute coordinates of bullets in the plot
                 offset = obj.bg.multiplier / 2;
-                disp(obj.listOfBul(i).x);
                 obj.Xs = [obj.Xs, obj.listOfBul(i).x * obj.bg.multiplier + offset];
                 obj.Ys = [obj.Ys, obj.listOfBul(i).y * obj.bg.multiplier + offset];
             end

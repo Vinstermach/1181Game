@@ -8,7 +8,7 @@ function main()
     % absolute coordinates are denoted by `inMapX` and `inMapY`
 
     global game;
-    game.botMatch = 1; % whether it's pve or pvp
+    game.botMatch = 0; % whether it's pve or pvp
     global bg; global p1; global p2;
     % p1 and p2 are human control, p3 is bot
     bg = background(16, 32); %unmber of units, pixel per unit
@@ -68,23 +68,33 @@ end
 
 function pressKey(~, ed)
     global game;
+    global bg;
     global p1; global p2;
     switch ed.Key
         case 'q'
             game.on = 0;
         % player one
         case 'leftarrow' 
-            p1.x = p1.x - 1;
-            p1.dir = "left";
+            if (bg.barriers(p1.y+1, p1.x) ~= 1)
+                % if the place that tank's going isn't a barrier
+                p1.x = p1.x - 1; % move tank
+                p1.dir = "left"; % update facing direction
+            end
         case 'rightarrow'  
-            p1.x = p1.x + 1;
-            p1.dir = "right";
-        case 'uparrow'             
-            p1.y = p1.y + 1;
-            p1.dir = "up";
+            if (bg.barriers(p1.y+1, p1.x+2) ~= 1)
+                p1.x = p1.x + 1;
+                p1.dir = "right";
+            end
+        case 'uparrow'       
+            if (bg.barriers(p1.y+2, p1.x+1) ~= 1)
+                p1.y = p1.y + 1;
+                p1.dir = "up";
+            end
         case 'downarrow' 
-            p1.y = p1.y - 1;
-            p1.dir = "down";
+            if (bg.barriers(p1.y, p1.x+1) ~= 1)
+                p1.y = p1.y - 1;
+                p1.dir = "down";
+            end
         case 'l'
             p1.fire = 1;
     end
@@ -94,17 +104,25 @@ function pressKey(~, ed)
         
         switch ed.Key
             case 'a' 
-                p2.x = p2.x - 1;
-                p2.dir = "left";
+                if (bg.barriers(p2.y+1, p2.x) ~= 1)
+                    p2.x = p2.x - 1;
+                    p2.dir = "left";
+                end
             case 'd'  
-                p2.x = p2.x + 1;
-                p2.dir = "right";
+                if (bg.barriers(p2.y+1, p2.x+2) ~= 1)
+                    p2.x = p2.x + 1;
+                    p2.dir = "right";
+                end
             case 'w' 
-                p2.y = p2.y + 1;
-                p2.dir = "up";
-            case 's'                 
-                p2.y = p2.y - 1;
-                p2.dir = "down";
+                if (bg.barriers(p2.y+2, p2.x+1) ~= 1)
+                    p2.y = p2.y + 1;
+                    p2.dir = "up";
+                end
+            case 's'             
+                if (bg.barriers(p2.y, p2.x+1) ~= 1)
+                    p2.y = p2.y - 1;
+                    p2.dir = "down";
+                end
             case 'e' 
                 p2.fire = 1;
         end
