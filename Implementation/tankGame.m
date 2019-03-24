@@ -8,7 +8,7 @@ function main()
     % absolute coordinates are denoted by `inMapX` and `inMapY`
 
     global game;
-    game.botMatch = 0; % whether it's pve or pvp
+    game.botMatch = 1; % whether it's pve or pvp
     global bg; global p1; global p2;
     % p1 and p2 are human control, p3 is bot
     bg = background(16, 32); %unmber of units, pixel per unit

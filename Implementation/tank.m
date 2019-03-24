@@ -84,19 +84,27 @@ classdef tank < handle
             %hard code this as AI algorithm 
             if (randi([0, 1])) %random move in x or y
                 if (opponent.x > obj.x)
-                    obj.x = obj.x + 1;
-                    obj.dir = "right";
+                    if (obj.bg.barriers(obj.y+1, obj.x+2) ~= 1)
+                        obj.x = obj.x + 1;
+                        obj.dir = "right";
+                    end
                 elseif (opponent.x < obj.x)
-                    obj.x = obj.x - 1;
-                    obj.dir = "left";
+                    if (obj.bg.barriers(obj.y+1, obj.x) ~= 1)
+                        obj.x = obj.x - 1;
+                        obj.dir = "left";
+                    end
                 end  
             else
                 if (opponent.y > obj.y)
-                    obj.y = obj.y + 1;
-                    obj.dir = "up";
+                    if (obj.bg.barriers(obj.y+2, obj.x+1) ~= 1)
+                        obj.y = obj.y + 1;
+                        obj.dir = "up";
+                    end
                 elseif (opponent.y < obj.y)
-                    obj.y = obj.y - 1;
-                    obj.dir = "down";
+                    if (obj.bg.barriers(obj.y, obj.x+1) ~= 1)
+                        obj.y = obj.y - 1;
+                        obj.dir = "down";
+                    end
                 end  
             end
         end
