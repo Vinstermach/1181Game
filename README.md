@@ -46,6 +46,8 @@ Matlab code for game
   end
   ```
   
+  This also applies to XML and CSS (if we use that).
+  
 * __Folding__
 
   No folding style is required. However, suggesting fold the loop/branch into one single line when it is very short.
