@@ -79,7 +79,7 @@ Matlab code for game
 
 # Using git to commit changes 
 
-If you're only working on one single file and no one else is working on that, it's okay to use GitHub web version to commit. But if you are collabrating with others on the same file, or modified multiple files, using web version would be a real pain. Thus I really recommand using Git. You can download Git [here](https://git-scm.com/downloads). 
+If you're only working on one single file and **have 150% confidence that no one else would be working on that**, it's okay to use GitHub web version to commit. But if you are collabrating with others on the same file, or modified multiple files, using web version would be a real pain. Thus I really recommand using Git. You can download Git [here](https://git-scm.com/downloads). 
 
 Note that GitHub is a platform that holds the code, while Git is the core that does the version/source control job. 
 
