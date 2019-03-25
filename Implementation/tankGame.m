@@ -68,33 +68,19 @@ end
 
 function pressKey(~, ed)
     global game;
-    global bg;
     global p1; global p2;
     switch ed.Key
         case 'q'
             game.on = 0;
         % player one
         case 'leftarrow' 
-            if (bg.barriers(p1.y+1, p1.x) ~= 1)
-                % if the place that tank's going isn't a barrier
-                p1.x = p1.x - 1; % move tank
-                p1.dir = "left"; % update facing direction
-            end
+            p1.move("left");
         case 'rightarrow'  
-            if (bg.barriers(p1.y+1, p1.x+2) ~= 1)
-                p1.x = p1.x + 1;
-                p1.dir = "right";
-            end
+            p1.move("right");
         case 'uparrow'       
-            if (bg.barriers(p1.y+2, p1.x+1) ~= 1)
-                p1.y = p1.y + 1;
-                p1.dir = "up";
-            end
+            p1.move("up");
         case 'downarrow' 
-            if (bg.barriers(p1.y, p1.x+1) ~= 1)
-                p1.y = p1.y - 1;
-                p1.dir = "down";
-            end
+            p1.move("down");
         case 'l'
             p1.fire = 1;
     end
@@ -104,25 +90,13 @@ function pressKey(~, ed)
         
         switch ed.Key
             case 'a' 
-                if (bg.barriers(p2.y+1, p2.x) ~= 1)
-                    p2.x = p2.x - 1;
-                    p2.dir = "left";
-                end
+                p2.move("left");
             case 'd'  
-                if (bg.barriers(p2.y+1, p2.x+2) ~= 1)
-                    p2.x = p2.x + 1;
-                    p2.dir = "right";
-                end
+                p2.move("right");
             case 'w' 
-                if (bg.barriers(p2.y+2, p2.x+1) ~= 1)
-                    p2.y = p2.y + 1;
-                    p2.dir = "up";
-                end
+                p2.move("up");
             case 's'             
-                if (bg.barriers(p2.y, p2.x+1) ~= 1)
-                    p2.y = p2.y - 1;
-                    p2.dir = "down";
-                end
+                p2.move("down");
             case 'e' 
                 p2.fire = 1;
         end

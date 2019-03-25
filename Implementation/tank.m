@@ -2,7 +2,11 @@ classdef tank < handle
     properties
         length = 32; % the pixel length of the tank image
         oriValue;    % records the original image
-        value;       % modified `oriValue`, used to display the image
+        value;
+        upValue;
+        downValue;
+        leftValue;
+        rightValue;
         bg;          % background, or to say the environment
         
         health = 5;  % max hit could afford
@@ -28,46 +32,37 @@ classdef tank < handle
             obj.x = X;
             obj.y = Y;
             obj.oriValue = flip(imread(Path) ,1);
-            obj.value = obj.oriValue;
+            obj.upValue = obj.oriValue;
+            obj.downValue = imrotate(obj.oriValue, 180,'bilinear');
+            obj.leftValue = imrotate(obj.oriValue, -90,'bilinear');
+            obj.rightValue = imrotate(obj.oriValue, 90,'bilinear');
             obj.bg = BG;
             obj.shells.bg = BG;
         end
         %==================================================================
         function obj = checkStatus(obj, opponent)
             
-            % count down to next shot
+            % count down time before next shot
             obj.countDown = obj.countDown - 1;
             if (obj.countDown < 0) 
                 obj.countDown = 0; end
 
-            %make the tank turn towards its direction 
+            % make the tank turn towards its direction 
             if (obj.dir == "up") 
-                obj.value = obj.oriValue;
+                obj.value = obj.upValue;
             elseif (obj.dir == "down") 
-                obj.value = imrotate(obj.oriValue, 180,'bilinear');
+                obj.value = obj.downValue;
             elseif (obj.dir == "left") 
-                obj.value = imrotate(obj.oriValue, -90,'bilinear');
+                obj.value = obj.leftValue;
             elseif (obj.dir == "right") 
-                obj.value = imrotate(obj.oriValue, 90,'bilinear');
+                obj.value = obj.rightValue;
             end
             
-            %check if the tank is within game border
-            borderLoc = obj.bg.scale;
-            if (obj.x > borderLoc - 1)
-                obj.x = borderLoc - 1;
-            elseif (obj.x < 0)
-                obj.x = 0;
-            end
-            if (obj.y > borderLoc - 1)
-                obj.y = borderLoc - 1;
-            elseif (obj.y < 0)
-                obj.y = 0;
-            end
-            
-            %translate grid coordinates to plotting coordinates
+            % translate grid coordinates to plotting coordinates
             obj.inMapX = obj.x * obj.bg.multiplier;
             obj.inMapY = obj.y * obj.bg.multiplier;
             
+            % gonna add hitting algorithm in this function
             obj.shells.updateBullets(opponent);
         end
         %==================================================================
@@ -80,31 +75,44 @@ classdef tank < handle
             end
         end
         %==================================================================
+        function obj = move(obj, direction)
+            switch direction
+                case "left"
+                    if (obj.bg.barriers(obj.y+1, obj.x) ~= 1)
+                        obj.x = obj.x - 1;
+                        obj.dir = direction;
+                    end
+                case "right"
+                    if (obj.bg.barriers(obj.y+1, obj.x+2) ~= 1)
+                        obj.x = obj.x + 1;
+                        obj.dir = direction;
+                    end
+                case "up"
+                    if (obj.bg.barriers(obj.y+2, obj.x+1) ~= 1)
+                        obj.y = obj.y + 1;
+                        obj.dir = direction;
+                    end
+                case "down"
+                    if (obj.bg.barriers(obj.y, obj.x+1) ~= 1)
+                        obj.y = obj.y - 1;
+                        obj.dir = direction;
+                    end
+            end
+        end
+        %==================================================================
         function decision(obj, opponent)
             %hard code this as AI algorithm 
             if (randi([0, 1])) %random move in x or y
                 if (opponent.x > obj.x)
-                    if (obj.bg.barriers(obj.y+1, obj.x+2) ~= 1)
-                        obj.x = obj.x + 1;
-                        obj.dir = "right";
-                    end
+                    obj.move("right");
                 elseif (opponent.x < obj.x)
-                    if (obj.bg.barriers(obj.y+1, obj.x) ~= 1)
-                        obj.x = obj.x - 1;
-                        obj.dir = "left";
-                    end
+                    obj.move("left");
                 end  
             else
                 if (opponent.y > obj.y)
-                    if (obj.bg.barriers(obj.y+2, obj.x+1) ~= 1)
-                        obj.y = obj.y + 1;
-                        obj.dir = "up";
-                    end
+                    obj.move("up");
                 elseif (opponent.y < obj.y)
-                    if (obj.bg.barriers(obj.y, obj.x+1) ~= 1)
-                        obj.y = obj.y - 1;
-                        obj.dir = "down";
-                    end
+                    obj.move("down");
                 end  
             end
         end
