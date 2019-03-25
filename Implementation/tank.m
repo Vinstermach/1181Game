@@ -9,8 +9,10 @@ classdef tank < handle
         rightValue;
         bg;          % background, or to say the environment
         
-        health = 5;  % max hit could afford
-        dir;    % facing direction
+        lifes;
+        HPpool = 5;  % max hit could afford
+        health;      % current health
+        dir;         % facing direction
         
         range = 12;  % effective range of bullet
         fire = 0;    % whether player press the key to fire
@@ -18,6 +20,8 @@ classdef tank < handle
         countDown = 0;   % CD from last attack
         shells = bullets(10);  % alias of `bullets`
         
+        birthX; 
+        birthY;
         inMapX;      % absolute coordintes in the plot
         inMapY;
         x;           % relative coordintes in the plot
@@ -27,8 +31,12 @@ classdef tank < handle
     methods
         function obj = tank(X, Y, Path, BG)
             %initilizing 
+            obj.birthX = X;
+            obj.birthY = Y;
             obj.x = X;
             obj.y = Y;
+            obj.health = obj.HPpool;
+            obj.lifes = 3;
             obj.oriValue = flip(imread(Path) ,1);
             obj.upValue = obj.oriValue;
             obj.downValue = imrotate(obj.oriValue, 180,'bilinear');

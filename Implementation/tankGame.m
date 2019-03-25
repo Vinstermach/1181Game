@@ -17,6 +17,7 @@ function main()
     p1.dir = "up"; p2.dir = "up";
     
     init(); % initlizing parameters
+    %loadingScreen();
     
     while(game.on)
         delete(get(gca,'Children')); %clear plot
@@ -42,23 +43,24 @@ function main()
         if (p1.health <= 0)
             game.lastWinner = "p2";
             game.p2Streak = game.p2Streak + 1;
-            break;
+            respawn(p1);
         end
         if (p2.health <= 0)
             game.lastWinner = "p1";
             game.p1Streak = game.p1Streak + 1;
-            break;
+            respawn(p2);
         end
         
         drawnow; % update plot
         pause(0.1);
     end
     
-    f = msgbox("Winner is " + game.lastWinner);
+    %f = msgbox("Winner is " + game.lastWinner);
     close(1);
 end
 
 %% Other Functions
+
 function init()
     global game;
     game.on = true;
@@ -146,5 +148,22 @@ function checkBullets(pp1, pp2)
                     pp1.shells.listOfBul(i) = [];
                 end
         end
+    end
+end
+
+function loadingScreen()
+    
+    imagesc();
+end
+
+function respawn(player)
+    % if player lose all health, respawn 
+    global game;
+    player.health = player.HPpool;
+    player.x = player.birthX;
+    player.y = player.birthY;
+    player.lifes = player.lifes - 1;
+    if (player.lifes == 0)
+        game.on = 0;
     end
 end
