@@ -8,7 +8,6 @@ function main()
     % absolute coordinates are denoted by `inMapX` and `inMapY`
 
     global game;
-    game.botMatch = 0; % whether it's pve or pvp
     global bg; global p1; global p2;
     % p1 and p2 are human control, p3 is bot
     bg = background(16, 32); %unmber of units, pixel per unit
@@ -17,7 +16,7 @@ function main()
     p1.dir = "up"; p2.dir = "up";
     
     init(); % initlizing parameters
-    %loadingScreen();
+    loadingScreen();
     
     while(game.on)
         delete(get(gca,'Children')); %clear plot
@@ -30,7 +29,7 @@ function main()
         if  (p2.fire == 1) 
             p2.fireAttempt(); p2.fire = 0; end
             
-        p1.checkStatus(p2); p2.checkStatus(p1);
+        p1.checkStatus(); p2.checkStatus();
         checkBullets(p1, p2);
         checkBullets(p2, p1);
         
@@ -98,6 +97,11 @@ function pressKey(~, ed)
             p1.move("down");
         case 'l'
             p1.fire = 1;
+            
+        case 'p'
+            game.loading.index = game.loading.index - 1;
+        case 'return'
+            game.loading.undecided = 0;
     end
     
     % player two
@@ -152,8 +156,28 @@ function checkBullets(pp1, pp2)
 end
 
 function loadingScreen()
+    global game;
+    global bg;
+    game.loading.bgImg = flip(imread('resources\baseselection.png'));
+    game.loading.selImg = imread('resources\select.png');
+    game.loading.undecided = 1;
+    game.loading.index = 0;
     
-    imagesc();
+    game.loading.selectX = 4;
+    game.loading.selectY = 7;
+    
+    set(gcf,'WindowKeyPressFcn',@pressKey);
+    while(game.loading.undecided)
+        delete(get(gca,'Children')); %clear plot
+        imagesc(0, 0, game.loading.bgImg);
+        xLoc = game.loading.selectX * bg.multiplier;
+        yLoc = (game.loading.selectY + rem(game.loading.index, 2)*2)* bg.multiplier;
+        imagesc(xLoc, yLoc, game.loading.selImg);
+        drawnow;
+        pause(0.1);
+    end
+    
+    game.botMatch = ~rem(game.loading.index, 2);
 end
 
 function respawn(player)
@@ -167,3 +191,5 @@ function respawn(player)
         game.on = 0;
     end
 end
+
+

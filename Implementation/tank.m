@@ -46,7 +46,7 @@ classdef tank < handle
             obj.shells.bg = BG;
         end
         %==================================================================
-        function obj = checkStatus(obj, opponent)
+        function obj = checkStatus(obj)
             
             % count down time before next shot
             obj.countDown = obj.countDown - 1;
