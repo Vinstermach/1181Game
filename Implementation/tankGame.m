@@ -8,12 +8,12 @@ function main()
     % absolute coordinates are denoted by `inMapX` and `inMapY`
 
     global game;
-    game.botMatch = 1; % whether it's pve or pvp
+    game.botMatch = 0; % whether it's pve or pvp
     global bg; global p1; global p2;
     % p1 and p2 are human control, p3 is bot
     bg = background(16, 32); %unmber of units, pixel per unit
-    p1 = tank(bg.scale - 2, bg.scale - 2, 'resources\tank1.png', bg);
-    p2 = tank(1, 1, 'resources\tank2.png', bg);
+    p1 = tank(bg.scale - 2, bg.scale - 2, 'resources\tank1.png', bg); % arrow control
+    p2 = tank(1, 1, 'resources\tank2.png', bg); % wasd control 
     p1.dir = "up"; p2.dir = "up";
     
     init(); % initlizing parameters
@@ -30,8 +30,8 @@ function main()
             p2.fireAttempt(); p2.fire = 0; end
             
         p1.checkStatus(p2); p2.checkStatus(p1);
-        p2.histX = p2.x; p2.histY = p2.y;
-        p1.histX = p1.x; p1.histY = p1.y;
+        checkBullets(p1, p2);
+        checkBullets(p2, p1);
         
         imagesc(0, 0, bg.value);
         imagesc(p1.inMapX, p1.inMapY, p1.value);
@@ -39,12 +39,22 @@ function main()
         scatter(p1.shells.Xs, p1.shells.Ys, p1.shells.dia, p1.shells.color, 'filled');
         scatter(p2.shells.Xs, p2.shells.Ys, p2.shells.dia, p2.shells.color, 'filled');
         
-        %fprintf('Current Barrier: %d', p2.bg.barrierMatrix(p2.y+1, p2.x+1));
+        if (p1.health <= 0)
+            game.lastWinner = "p2";
+            game.p2Streak = game.p2Streak + 1;
+            break;
+        end
+        if (p2.health <= 0)
+            game.lastWinner = "p1";
+            game.p1Streak = game.p1Streak + 1;
+            break;
+        end
         
         drawnow; % update plot
         pause(0.1);
     end
     
+    f = msgbox("Winner is " + game.lastWinner);
     close(1);
 end
 
@@ -55,6 +65,9 @@ function init()
     global bg;
     game.UI = figure('menubar','none',...
                'numbertitle','off');
+    game.lastWinner = "Null";
+    game.p1Streak = 0;
+    game.p2Streak = 0;
            
     hold on;
     axis([0, bg.length, 0, bg.length])
@@ -99,6 +112,39 @@ function pressKey(~, ed)
                 p2.move("down");
             case 'e' 
                 p2.fire = 1;
+        end
+    end
+end
+
+function checkBullets(pp1, pp2)
+    % check if pp1's bullets hit pp2, if so, decrease pp2's HP
+    
+    % shittiest function ever
+    % due to the weird memory management of Matlab
+    for i = 1 : length(pp1.shells.listOfBul)
+        xDist = pp1.shells.listOfBul(i).x - pp2.x;
+        yDist = pp1.shells.listOfBul(i).y - pp2.y;
+        switch pp1.shells.listOfBul(i).direction
+            case "up"
+                if (xDist == 0) && (yDist == 0 || yDist == 1)
+                    pp2.health = pp2.health - 1;
+                    pp1.shells.listOfBul(i) = [];
+                end
+            case "down"
+                if (xDist == 0) && (yDist == 0 || yDist == -1)
+                    pp2.health = pp2.health - 1;
+                    pp1.shells.listOfBul(i) = [];
+                end
+            case "left"
+                if (xDist == 0 || xDist == -1) && (yDist == 0)
+                    pp2.health = pp2.health - 1;
+                    pp1.shells.listOfBul(i) = [];
+                end
+            case "right"
+                if (xDist == 0 || xDist == 1) && (yDist == 0)
+                    pp2.health = pp2.health - 1;
+                    pp1.shells.listOfBul(i) = [];
+                end
         end
     end
 end

@@ -22,8 +22,6 @@ classdef tank < handle
         inMapY;
         x;           % relative coordintes in the plot
         y;
-        histX;       % history coordinate, used to restore location
-        histY;
     end
     
     methods
@@ -63,7 +61,7 @@ classdef tank < handle
             obj.inMapY = obj.y * obj.bg.multiplier;
             
             % gonna add hitting algorithm in this function
-            obj.shells.updateBullets(opponent);
+            obj.shells.updateBullets();
         end
         %==================================================================
         function obj = fireAttempt(obj)
