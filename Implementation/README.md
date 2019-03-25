@@ -10,6 +10,6 @@
 
 # Current goal of game implementation  
 
-1. Count health of tanks 
+1. Starting and ending animation
 2. A better Computer opponent algorithm 
-3. Brick interaction
+3. Killing streak and appearance improvement
