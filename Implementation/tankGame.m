@@ -53,8 +53,6 @@ function main()
         drawnow; % update plot
         pause(0.1);
     end
-    
-    %f = msgbox("Winner is " + game.lastWinner);
     close(1);
 end
 
@@ -75,6 +73,9 @@ function init()
     game.mainScreen = plot([0, bg.length], [0, bg.length]);
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
+    % use `set` instead of waitkey and get
+    % bacasue `wait` and `get` would pause the game
+    % thus the computer opponent would not be able to move
     set(gca,'xtick',[]); set(gca,'xticklabel',[]);
     set(gca,'ytick',[]); set(gca,'yticklabel',[]);
     drawnow
@@ -191,5 +192,6 @@ function respawn(player)
         game.on = 0;
     end
 end
+
 
 
