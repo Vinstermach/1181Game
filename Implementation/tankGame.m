@@ -59,9 +59,9 @@ end
 %% Other Functions
 
 function init()
-    global game;
-    game.on = true;
-    global bg;
+    global game; global bg;
+    game.on = true;    
+    game.botMatch = 0; 
     game.UI = figure('menubar','none',...
                'numbertitle','off');
     game.lastWinner = "Null";
@@ -69,7 +69,7 @@ function init()
     game.p2Streak = 0;
            
     hold on;
-    axis([0, bg.length, 0, bg.length])
+    axis([0, bg.length + bg.extraLen * bg.multiplier, 0, bg.length])
     game.mainScreen = plot([0, bg.length], [0, bg.length]);
     
     set(gcf,'WindowKeyPressFcn',@pressKey);

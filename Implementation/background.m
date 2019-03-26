@@ -11,6 +11,7 @@ classdef background < handle
         grassMatrix; % boolean matrix recording where are the grass blocks
         brickMatrix; % boolean matrix recording where are the brick blocks
         barriers;
+        extraLen;
     end
     
     methods
@@ -18,6 +19,7 @@ classdef background < handle
             obj.scale = Scale;
             obj.multiplier = Multiplier;
             obj.length = obj.scale * obj.multiplier;
+            obj.extraLen = 4;
             obj.grassPath = 'resources\Grass.png';
             obj.grassImg = imread(obj.grassPath);
             obj.brickPath = 'resources\bricks.png';
