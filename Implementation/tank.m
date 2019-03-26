@@ -2,14 +2,15 @@ classdef tank < handle
     properties
         length = 32; % the pixel length of the tank image
         oriValue;    % records the original image
-        value;
-        upValue;
-        downValue;
-        leftValue;
-        rightValue;
+        value;       % image used in the plot
+        upValue;     % image of tank facing up
+        downValue;   % image of tank facing down
+        leftValue;   % image of tank facing keft
+        rightValue;  % image of tank facing right
         bg;          % background, or to say the environment
+        opponent;    % reference opponent more easily 
         
-        lifes;
+        lifes;       % just... lifes
         HPpool = 5;  % max hit could afford
         health;      % current health
         dir;         % facing direction
@@ -20,8 +21,8 @@ classdef tank < handle
         countDown = 0;   % CD from last attack
         shells = bullets(10);  % alias of `bullets`
         
-        birthX; 
-        birthY;
+        birthX;      % relative coordintes of tanks' birth place
+        birthY;      
         inMapX;      % absolute coordintes in the plot
         inMapY;
         x;           % relative coordintes in the plot
@@ -99,28 +100,48 @@ classdef tank < handle
                         obj.dir = direction;
                     end
                 case "down"
-                    if (obj.bg.barriers(obj.y, obj.x+1) ~= 1)
+                    if (obj.bg.barriers(obj.y, obj.x+1) ~= 1)   
                         obj.y = obj.y - 1;
                         obj.dir = direction;
                     end
             end
         end
         %==================================================================
-        function decision(obj, opponent)
+%         function obj = collideOpponent(obj, direction)
+%             if 
+%         end
+        %==================================================================
+        function decision(obj)
             %hard code this as AI algorithm 
             if (randi([0, 1])) %random move in x or y
-                if (opponent.x > obj.x)
+                if (obj.opponent.x > obj.x)
                     obj.move("right");
-                elseif (opponent.x < obj.x)
+                elseif (obj.opponent.x < obj.x)
                     obj.move("left");
                 end  
             else
-                if (opponent.y > obj.y)
+                if (obj.opponent.y > obj.y)
                     obj.move("up");
-                elseif (opponent.y < obj.y)
+                elseif (obj.opponent.y < obj.y)
                     obj.move("down");
                 end  
             end
+            
+            if (obj.x == obj.opponent.x)
+                if (obj.y > obj.opponent.y && obj.dir == "up")
+                    obj.fireAttempt();
+                elseif (obj.y < obj.opponent.y && obj.dir == "down")
+                    obj.fireAttempt();
+                end
+            end
+            if (obj.y == obj.opponent.y)
+                if (obj.x > obj.opponent.x && obj.dir == "left")
+                    obj.fireAttempt();
+                elseif (obj.x < obj.opponent.x && obj.dir == "right")
+                    obj.fireAttempt();
+                end
+            end
+            
         end
     end
         

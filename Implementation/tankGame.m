@@ -13,7 +13,7 @@ function main()
     bg = background(16, 32); %unmber of units, pixel per unit
     p1 = tank(bg.scale - 2, bg.scale - 2, 'resources\tank1.png', bg); % arrow control
     p2 = tank(1, 1, 'resources\tank2.png', bg); % wasd control 
-    p1.dir = "up"; p2.dir = "up";
+    
     
     init(); % initlizing parameters
     loadingScreen();
@@ -22,7 +22,7 @@ function main()
         delete(get(gca,'Children')); %clear plot
         
         if game.botMatch
-            p2.decision(p1); end
+            p2.decision(); end
         
         if  (p1.fire == 1) 
             p1.fireAttempt(); p1.fire = 0; end
@@ -60,6 +60,10 @@ end
 
 function init()
     global game; global bg;
+    global p1; global p2;
+    p1.dir = "up"; p2.dir = "up";
+    p1.opponent = p2; p2.opponent = p1; 
+    
     game.on = true;    
     game.botMatch = 0; 
     game.UI = figure('menubar','none',...
