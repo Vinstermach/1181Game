@@ -53,7 +53,7 @@ function main()
                 end
             end
             game.lastWinner = "p2";
-            respawn(p1);
+            respawn(p1, false);
         end
         if (p2.health <= 0)
             game.p2Streak = 0;
@@ -68,7 +68,14 @@ function main()
                 end
             end
             game.lastWinner = "p1";
-            respawn(p2);
+            respawn(p2, false);
+        end
+        
+        if (p1.lifes == 0 || p2.lifes == 0)
+            game.level = game.level + 1;
+            bg.resetMap(game.level);
+            bg.generateImage();
+            respawn(p1, true); respawn(p2, true);
         end
         
         scoreBoardUpdate();
@@ -90,6 +97,7 @@ function init()
     
     game.on = true;    
     game.botMatch = 0;               % place holder for bot status
+    game.level = 1;
     game.UI = figure('menubar','none',...
                'numbertitle','off'); % cancel menu bar
     game.lastWinner = "null";        % for recording kill streak
@@ -232,12 +240,15 @@ function loadingScreen()
     game.botMatch = ~rem(game.loading.index, 2); % interpretate user choice
 end
 
-function respawn(player)
+function respawn(player, resetLife)
     % if one tank lose all health, respawn 
-    player.health = 5;
+    temp = player.HPpool;
+    player.health = temp;
     player.x = player.birthX;
     player.y = player.birthY;
     player.lifes = player.lifes - 1;
+    if resetLife
+        player.lifes = 3; end
 end
 
 function scoreBoardUpdate()
@@ -288,6 +299,8 @@ function img = setStreak(streak)
         case 2
             img = game.doubleKill;
         case 3
+            img = game.dominating;
+        otherwise
             img = game.dominating;
     end
 end

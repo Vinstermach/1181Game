@@ -11,7 +11,7 @@ classdef tank < handle
         opponent;    % reference opponent more easily 
         
         lifes;       % just... lifes
-        HPpool = 5;  % max hit could afford
+        HPpool = 3;  % max hit could afford
         health;      % current health
         dir;         % facing direction
         
