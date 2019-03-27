@@ -13,9 +13,9 @@ function main()
     bg = background(16, 32); %unmber of units, pixel per unit
     p1 = tank(bg.scale - 2, bg.scale - 2, 'resources\tank1.png', bg); % arrow control
     p2 = tank(1, 1, 'resources\tank2.png', bg); % wasd control 
-    
-    
     init(); % initlizing parameters
+    
+    play(bg.music);
     loadingScreen();
     
     while(game.on)
@@ -40,19 +40,27 @@ function main()
         scatter(p2.shells.Xs, p2.shells.Ys, p2.shells.dia, p2.shells.color, 'filled');
         
         if (p1.health <= 0)
+            game.p1Streak = 0;
+            if (game.lastWinner == "p2" || game.lastWinner == "null")
+                game.p2Streak = game.p2Streak + 1;
+            end
             game.lastWinner = "p2";
-            game.p2Streak = game.p2Streak + 1;
             respawn(p1);
         end
         if (p2.health <= 0)
+            game.p2Streak = 0;
+            if (game.lastWinner == "p1"  || game.lastWinner == "null")
+                game.p1Streak = game.p1Streak + 1;
+            end
             game.lastWinner = "p1";
-            game.p1Streak = game.p1Streak + 1;
             respawn(p2);
         end
         
+        scoreBoardUpdate();
         drawnow; % update plot
         pause(0.1);
     end
+    stop(bg.music)
     close(1);
 end
 
@@ -68,9 +76,12 @@ function init()
     game.botMatch = 0;               % place holder for bot status
     game.UI = figure('menubar','none',...
                'numbertitle','off'); % cancel menu bar
-    game.lastWinner = "Null";        % for recording kill streak
+    game.lastWinner = "null";        % for recording kill streak
     game.p1Streak = 0;
     game.p2Streak = 0;
+    game.firstBlood = flip(imread('resources\firstBlood.png'));
+    game.doubleKill = flip(imread('resources\doubleKill.png'));
+    game.dominating = flip(imread('resources\dominating.png'));
            
     hold on;
     axis([0, bg.length + bg.extraLen * bg.multiplier, 0, bg.length])
@@ -187,6 +198,7 @@ function loadingScreen()
         xLoc = game.loading.selectX * bg.multiplier; % actual coordinate
         yLoc = (game.loading.selectY + rem(game.loading.index, 2)*2)* bg.multiplier;
         imagesc(xLoc, yLoc, game.loading.selImg);
+        imagesc(bg.length, 0, bg.scoreBoard);
         drawnow;
         pause(0.1);
     end
@@ -202,5 +214,56 @@ function respawn(player)
     player.lifes = player.lifes - 1;
 end
 
-
+function scoreBoardUpdate()
+    global game; global bg; 
+    global p1; global p2;
+    p1Health = int2str(p1.health);
+    p2Health = int2str(p2.health);
+    offsetX = bg.length + 16;
+    offsetY = bg.length - bg.multiplier - 16;
+    imagesc(bg.length, 0, bg.scoreBoard);
+    
+    % title
+    text(offsetX, offsetY, '  TANK', 'color', 'white')
+    offsetY = offsetY - bg.multiplier; % move the position one block lower
+    text(offsetX, offsetY, 'COMMANDER', 'color', 'white')
+    offsetY = offsetY - 2*bg.multiplier; 
+    
+    % player one info
+    text(offsetX, offsetY, 'Player 1:', 'color', 'white')
+    offsetY = offsetY - bg.multiplier;
+    text(offsetX, offsetY, '  Life: ', 'color', 'white')
+    imgLocX = offsetX + 2*bg.multiplier; 
+    for (i = 1 : p1.lifes) 
+        imagesc(imgLocX, offsetY - 16, p1.oriValue);
+        imgLocX = imgLocX + bg.multiplier;
+    end
+    offsetY = offsetY - bg.multiplier;
+    text(offsetX, offsetY, ['  HP:   ' p1Health], 'color', 'white')
+    offsetY = offsetY - bg.multiplier;
+    if (game.p1Streak == 1) % ploting tank icon
+        imagesc(offsetX, offsetY - 16, game.firstBlood);
+    elseif (game.p1Streak == 2)
+        imagesc(offsetX, offsetY - 16, game.doubleKill);
+    end
+    offsetY = offsetY - 2*bg.multiplier;
+    
+    % player two info
+    text(offsetX, offsetY, 'Player 2:', 'color', 'white')
+    offsetY = offsetY - bg.multiplier;
+    text(offsetX, offsetY, '  Life: ', 'color', 'white')
+    imgLocX = offsetX + 2*bg.multiplier;
+    for (i = 1 : p2.lifes)
+        imagesc(imgLocX, offsetY - 16, p2.oriValue);
+        imgLocX = imgLocX + bg.multiplier;
+    end
+    offsetY = offsetY - bg.multiplier;
+    text(offsetX, offsetY, ['  HP:   ' p2Health], 'color', 'white')
+    imgLocX = offsetX + 2*bg.multiplier;
+    if (game.p2Streak == 1)
+        imagesc(offsetX, offsetY - 16, game.firstBlood);
+    elseif (game.p2Streak == 2)
+        imagesc(offsetX, offsetY - 16, game.doubleKill);
+    end
+end
 

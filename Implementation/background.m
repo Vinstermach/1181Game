@@ -3,15 +3,16 @@ classdef background < handle
         scale;       % number of units 
         multiplier;  % the pixel of each unit 
         length;
-        grassPath;   % file path of grass image
         grassImg;
-        brickPath;   % file path of brick image
         brickImg;
+        scoreBoard;
         value;       % the final image
         grassMatrix; % boolean matrix recording where are the grass blocks
         brickMatrix; % boolean matrix recording where are the brick blocks
         barriers;    % blocks that the tanks cannot reach 
         extraLen;    % extend the canvas for score board 
+        soundTrack;
+        music;
     end
     
     methods
@@ -19,17 +20,19 @@ classdef background < handle
             obj.scale = Scale;
             obj.multiplier = Multiplier;
             obj.length = obj.scale * obj.multiplier;
-            obj.extraLen = 4;
-            obj.grassPath = 'resources\Grass.png';
-            obj.grassImg = imread(obj.grassPath);
-            obj.brickPath = 'resources\bricks.png';
-            obj.brickImg = imread(obj.brickPath);
+            obj.extraLen = 6;
+            obj.grassImg = imread('resources\Grass.png');
+            obj.brickImg = imread('resources\bricks.png');
+            obj.scoreBoard = imread('resources\scoreBoard.png');
+            obj.soundTrack = audioread('resources\redAndGoldCasino.wav');
+            obj.music = audioplayer(obj.soundTrack, 44100);
             obj.readArray();
             obj.generateImage();
         end
         %=================================================================
         function obj = generateImage(obj)
             img = uint8(zeros(obj.length, obj.length, 3));
+            
             rowStart = 1;
             for (row = 1 : obj.scale)
                 rowEnd = rowStart + obj.multiplier - 1;
@@ -47,7 +50,6 @@ classdef background < handle
                 rowStart = rowEnd + 1;
             end
             obj.value = img;
-            
             % `obj.barriers` defines unpenetrable blocks 
             obj.barriers = obj.grassMatrix + obj.brickMatrix;
         end

@@ -157,9 +157,9 @@ classdef tank < handle
             
             % shoot if the player is ahead
             if (obj.x == obj.opponent.x)
-                if (obj.y > obj.opponent.y && obj.dir == "up")
+                if (obj.y < obj.opponent.y && obj.dir == "up")
                     obj.fireAttempt();
-                elseif (obj.y < obj.opponent.y && obj.dir == "down")
+                elseif (obj.y > obj.opponent.y && obj.dir == "down")
                     obj.fireAttempt();
                 end
             end
