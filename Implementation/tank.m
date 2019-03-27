@@ -82,34 +82,62 @@ classdef tank < handle
             end
         end
         %==================================================================
+        function res = opponentAhead(obj, direction)
+            % this fucntion is created to avoid player position colliding 
+            res = false;     % by default its not collide
+            switch direction
+            case "left" 
+                % if player is moving towards left 
+                % and opponent is at the left side, then return false
+                if (obj.opponent.x == obj.x-1 && obj.opponent.y == obj.y)
+                    res = true;
+                end
+            case "right"
+                if (obj.opponent.x == obj.x+1 && obj.opponent.y == obj.y)
+                    res = true;
+                end
+            case "up"
+                if (obj.opponent.x == obj.x && obj.opponent.y == obj.y+1)
+                    res = true;
+                end
+            case "down"
+                if (obj.opponent.x == obj.x && obj.opponent.y == obj.y-1)
+                    res = true;
+                end
+            end
+        end
+        %==================================================================
         function obj = move(obj, direction)
+            % `direction` is the direction tank intend to move
             switch direction
                 case "left"
-                    if (obj.bg.barriers(obj.y+1, obj.x) ~= 1)
+                    if (obj.bg.barriers(obj.y+1, obj.x) ~= 1) &&...
+                            (~obj.opponentAhead(direction)) 
+                        % if that direction has no wall
+                        % and opponent is not at that direction, then move
                         obj.x = obj.x - 1;
                         obj.dir = direction;
                     end
                 case "right"
-                    if (obj.bg.barriers(obj.y+1, obj.x+2) ~= 1)
+                    if (obj.bg.barriers(obj.y+1, obj.x+2) ~= 1) &&...
+                            (~obj.opponentAhead(direction)) 
                         obj.x = obj.x + 1;
                         obj.dir = direction;
                     end
                 case "up"
-                    if (obj.bg.barriers(obj.y+2, obj.x+1) ~= 1)
+                    if (obj.bg.barriers(obj.y+2, obj.x+1) ~= 1) &&...
+                            (~obj.opponentAhead(direction)) 
                         obj.y = obj.y + 1;
                         obj.dir = direction;
                     end
                 case "down"
-                    if (obj.bg.barriers(obj.y, obj.x+1) ~= 1)   
+                    if (obj.bg.barriers(obj.y, obj.x+1) ~= 1) &&...
+                            (~obj.opponentAhead(direction))   
                         obj.y = obj.y - 1;
                         obj.dir = direction;
                     end
             end
         end
-        %==================================================================
-%         function obj = collideOpponent(obj, direction)
-%             if 
-%         end
         %==================================================================
         function decision(obj)
             %hard code this as AI algorithm 
@@ -127,6 +155,7 @@ classdef tank < handle
                 end  
             end
             
+            % shoot if the player is ahead
             if (obj.x == obj.opponent.x)
                 if (obj.y > obj.opponent.y && obj.dir == "up")
                     obj.fireAttempt();

@@ -61,14 +61,14 @@ end
 function init()
     global game; global bg;
     global p1; global p2;
-    p1.dir = "up"; p2.dir = "up";
+    p1.dir = "up"; p2.dir = "down";  % initial direction
     p1.opponent = p2; p2.opponent = p1; 
     
     game.on = true;    
-    game.botMatch = 0; 
+    game.botMatch = 0;               % place holder for bot status
     game.UI = figure('menubar','none',...
-               'numbertitle','off');
-    game.lastWinner = "Null";
+               'numbertitle','off'); % cancel menu bar
+    game.lastWinner = "Null";        % for recording kill streak
     game.p1Streak = 0;
     game.p2Streak = 0;
            
@@ -133,11 +133,19 @@ function checkBullets(pp1, pp2)
     % shittiest function ever
     % due to the weird memory management of Matlab
     for i = 1 : length(pp1.shells.listOfBul)
+        % because bullet trvals faster than tank
+        % can't simply check if the coordinates are same
+        % also have to check if the tank is within bullet hitting range
+        if (i > length(pp1.shells.listOfBul)) 
+            break 
+        end
         xDist = pp1.shells.listOfBul(i).x - pp2.x;
         yDist = pp1.shells.listOfBul(i).y - pp2.y;
         switch pp1.shells.listOfBul(i).direction
             case "up"
                 if (xDist == 0) && (yDist == 0 || yDist == 1)
+                    % if hit, opponent's health minus one
+                    % and elminate that bullet
                     pp2.health = pp2.health - 1;
                     pp1.shells.listOfBul(i) = [];
                 end
@@ -161,40 +169,37 @@ function checkBullets(pp1, pp2)
 end
 
 function loadingScreen()
+    % the screen before game
     global game;
     global bg;
     game.loading.bgImg = flip(imread('resources\baseselection.png'));
     game.loading.selImg = imread('resources\select.png');
-    game.loading.undecided = 1;
-    game.loading.index = 0;
+    game.loading.undecided = 1; % looping condition 
+    game.loading.index = 0;     % records user choice 
     
-    game.loading.selectX = 4;
-    game.loading.selectY = 7;
+    game.loading.selectX = 4;   % x coordinate of arrow icon
+    game.loading.selectY = 7;   % y coordinate of arrow icon
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
     while(game.loading.undecided)
         delete(get(gca,'Children')); %clear plot
         imagesc(0, 0, game.loading.bgImg);
-        xLoc = game.loading.selectX * bg.multiplier;
+        xLoc = game.loading.selectX * bg.multiplier; % actual coordinate
         yLoc = (game.loading.selectY + rem(game.loading.index, 2)*2)* bg.multiplier;
         imagesc(xLoc, yLoc, game.loading.selImg);
         drawnow;
         pause(0.1);
     end
     
-    game.botMatch = ~rem(game.loading.index, 2);
+    game.botMatch = ~rem(game.loading.index, 2); % interpretate user choice
 end
 
 function respawn(player)
-    % if player lose all health, respawn 
-    global game;
+    % if one tank lose all health, respawn 
     player.health = player.HPpool;
     player.x = player.birthX;
     player.y = player.birthY;
     player.lifes = player.lifes - 1;
-    if (player.lifes == 0)
-        game.on = 0;
-    end
 end
 
 

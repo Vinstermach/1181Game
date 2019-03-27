@@ -3,15 +3,15 @@ classdef background < handle
         scale;       % number of units 
         multiplier;  % the pixel of each unit 
         length;
-        grassPath;
+        grassPath;   % file path of grass image
         grassImg;
-        brickPath;
+        brickPath;   % file path of brick image
         brickImg;
         value;       % the final image
         grassMatrix; % boolean matrix recording where are the grass blocks
         brickMatrix; % boolean matrix recording where are the brick blocks
-        barriers;
-        extraLen;
+        barriers;    % blocks that the tanks cannot reach 
+        extraLen;    % extend the canvas for score board 
     end
     
     methods
