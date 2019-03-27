@@ -24,7 +24,7 @@ classdef background < handle
             obj.grassImg = imread('resources\Grass.png');
             obj.brickImg = imread('resources\bricks.png');
             obj.scoreBoard = imread('resources\scoreBoard.png');
-            obj.soundTrack = audioread('resources\redAndGoldCasino.wav');
+            obj.soundTrack = audioread('resources\redAndGoldCasino.wav')/5;
             obj.music = audioplayer(obj.soundTrack, 44100);
             obj.readArray();
             obj.generateImage();

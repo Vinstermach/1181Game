@@ -9,12 +9,13 @@ function main()
 
     global game;
     global bg; global p1; global p2;
-    % p1 and p2 are human control, p3 is bot
+    % create instances: 
     bg = background(16, 32); %unmber of units, pixel per unit
     p1 = tank(bg.scale - 2, bg.scale - 2, 'resources\tank1.png', bg); % arrow control
     p2 = tank(1, 1, 'resources\tank2.png', bg); % wasd control 
     init(); % initlizing parameters
     
+    %start playing music 
     play(bg.music);
     loadingScreen();
     
@@ -43,6 +44,13 @@ function main()
             game.p1Streak = 0;
             if (game.lastWinner == "p2" || game.lastWinner == "null")
                 game.p2Streak = game.p2Streak + 1;
+                if (game.p2Streak == 1)
+                    play(game.firstBloodSound)
+                elseif (game.p2Streak == 2)
+                    play(game.doubleKillSound)
+                elseif (game.p2Streak == 3)
+                    play(game.dominatingSound)
+                end
             end
             game.lastWinner = "p2";
             respawn(p1);
@@ -51,6 +59,13 @@ function main()
             game.p2Streak = 0;
             if (game.lastWinner == "p1"  || game.lastWinner == "null")
                 game.p1Streak = game.p1Streak + 1;
+                if (game.p1Streak == 1)
+                    play(game.firstBloodSound)
+                elseif (game.p1Streak == 2)
+                    play(game.doubleKillSound)
+                elseif (game.p1Streak == 3)
+                    play(game.dominatingSound)
+                end
             end
             game.lastWinner = "p1";
             respawn(p2);
@@ -60,6 +75,7 @@ function main()
         drawnow; % update plot
         pause(0.1);
     end
+    
     stop(bg.music)
     close(1);
 end
@@ -82,7 +98,17 @@ function init()
     game.firstBlood = flip(imread('resources\firstBlood.png'));
     game.doubleKill = flip(imread('resources\doubleKill.png'));
     game.dominating = flip(imread('resources\dominating.png'));
-           
+    game.firstBloodSound = audioplayer(audioread( ...
+        'resources\killSound\firstBloodStd.mp3'), 44100);
+    game.doubleKillSound = audioplayer(audioread( ...
+        'resources\killSound\doubleKillStd.mp3'), 44100);
+    game.dominatingSound = audioplayer(audioread( ...
+        'resources\killSound\dominatingStd.mp3'), 44100);
+    
+    game.offsetX = bg.length + 16;
+    game.offsetY = bg.length - bg.multiplier - 16 : -bg.multiplier : bg.length-16*bg.multiplier ;
+    % `game.offsetY` is an array recording text loction in scoreBoard
+    
     hold on;
     axis([0, bg.length + bg.extraLen * bg.multiplier, 0, bg.length])
     game.mainScreen = plot([0, bg.length], [0, bg.length]);
@@ -208,7 +234,7 @@ end
 
 function respawn(player)
     % if one tank lose all health, respawn 
-    player.health = player.HPpool;
+    player.health = 5;
     player.x = player.birthX;
     player.y = player.birthY;
     player.lifes = player.lifes - 1;
@@ -219,51 +245,50 @@ function scoreBoardUpdate()
     global p1; global p2;
     p1Health = int2str(p1.health);
     p2Health = int2str(p2.health);
-    offsetX = bg.length + 16;
-    offsetY = bg.length - bg.multiplier - 16;
+    p1Streak = setStreak(game.p1Streak); 
+    p2Streak = setStreak(game.p2Streak);
     imagesc(bg.length, 0, bg.scoreBoard);
     
     % title
-    text(offsetX, offsetY, '  TANK', 'color', 'white')
-    offsetY = offsetY - bg.multiplier; % move the position one block lower
-    text(offsetX, offsetY, 'COMMANDER', 'color', 'white')
-    offsetY = offsetY - 2*bg.multiplier; 
+    text(game.offsetX, game.offsetY(1), '  TANK', 'color', 'white')
+    text(game.offsetX, game.offsetY(2), 'COMMANDER', 'color', 'white')
     
     % player one info
-    text(offsetX, offsetY, 'Player 1:', 'color', 'white')
-    offsetY = offsetY - bg.multiplier;
-    text(offsetX, offsetY, '  Life: ', 'color', 'white')
-    imgLocX = offsetX + 2*bg.multiplier; 
-    for (i = 1 : p1.lifes) 
-        imagesc(imgLocX, offsetY - 16, p1.oriValue);
+    text(game.offsetX, game.offsetY(4), 'Player 1:', 'color', 'white')
+    text(game.offsetX, game.offsetY(5), '  Life: ', 'color', 'white')
+    imgLocX = game.offsetX + 2*bg.multiplier; 
+    for (i = 1 : p1.lifes) % display left life 
+        imagesc(imgLocX, game.offsetY(5) - 16, p1.oriValue);
         imgLocX = imgLocX + bg.multiplier;
     end
-    offsetY = offsetY - bg.multiplier;
-    text(offsetX, offsetY, ['  HP:   ' p1Health], 'color', 'white')
-    offsetY = offsetY - bg.multiplier;
-    if (game.p1Streak == 1) % ploting tank icon
-        imagesc(offsetX, offsetY - 16, game.firstBlood);
-    elseif (game.p1Streak == 2)
-        imagesc(offsetX, offsetY - 16, game.doubleKill);
-    end
-    offsetY = offsetY - 2*bg.multiplier;
+    text(game.offsetX, game.offsetY(6), ['  HP:   ' p1Health], 'color', 'white')
+    imagesc(game.offsetX, game.offsetY(7) - 16, p1Streak);
+
     
     % player two info
-    text(offsetX, offsetY, 'Player 2:', 'color', 'white')
-    offsetY = offsetY - bg.multiplier;
-    text(offsetX, offsetY, '  Life: ', 'color', 'white')
-    imgLocX = offsetX + 2*bg.multiplier;
+    text(game.offsetX, game.offsetY(10), 'Player 2:', 'color', 'white')
+    text(game.offsetX, game.offsetY(11), '  Life: ', 'color', 'white')
+    imgLocX = game.offsetX + 2*bg.multiplier;
     for (i = 1 : p2.lifes)
-        imagesc(imgLocX, offsetY - 16, p2.oriValue);
+        imagesc(imgLocX, game.offsetY(11) - 16, p2.oriValue);
         imgLocX = imgLocX + bg.multiplier;
     end
-    offsetY = offsetY - bg.multiplier;
-    text(offsetX, offsetY, ['  HP:   ' p2Health], 'color', 'white')
-    imgLocX = offsetX + 2*bg.multiplier;
-    if (game.p2Streak == 1)
-        imagesc(offsetX, offsetY - 16, game.firstBlood);
-    elseif (game.p2Streak == 2)
-        imagesc(offsetX, offsetY - 16, game.doubleKill);
+    text(game.offsetX, game.offsetY(12), ['  HP:   ' p2Health], 'color', 'white')
+    imagesc(game.offsetX, game.offsetY(13) - 16, p2Streak);
+ 
+end
+
+function img = setStreak(streak)
+    global game;
+    switch streak
+        case 0
+            img = 0;
+        case 1
+            img = game.firstBlood;
+        case 2
+            img = game.doubleKill;
+        case 3
+            img = game.dominating;
     end
 end
 
