@@ -5,7 +5,9 @@ classdef background < handle
         length;
         grassImg;
         brickImg;
-        scoreBoard;
+        instrImg;    % image ised in loading screen
+        scoreBoard;  % image used during game
+        ending;
         value;       % the final image
         borderArray; % the border of the battlefield 
         grassMatrix; % boolean matrix recording where are the grass blocks
@@ -17,6 +19,10 @@ classdef background < handle
         
         grassAlt;
         brickAlt;
+        p1Win;
+        p2Win;
+        aiWin1;
+        aiWin2;
     end
     
     methods
@@ -29,11 +35,17 @@ classdef background < handle
             obj.extraLen = 6;
             obj.grassImg = imread('resources\Grass.png');
             obj.brickImg = imread('resources\bricks.png');
-            obj.scoreBoard = imread('resources\scoreBoard.png');
+            obj.scoreBoard = flip(imread('resources\scoreBoard.png'));
+            obj.instrImg = flip(imread('resources\scoreBoardInst.png'));
+            obj.p1Win = flip(imread('resources\wins\player1.png'));
+            obj.p2Win = flip(imread('resources\wins\player2.png'));
+            obj.aiWin1 = flip(imread('resources\wins\aiWin1.png'));
+            obj.aiWin2 = flip(imread('resources\wins\aiWin2.png'));
+            obj.ending = flip(imread('resources\ending.png'));
             obj.soundTrack = audioread('resources\redAndGoldCasino.wav')/5;
             obj.music = audioplayer(obj.soundTrack, 44100);
             obj.readArray();
-            obj.resetMap(1);
+            obj.resetMap();
             obj.generateImage();
         end
         %=================================================================
@@ -61,7 +73,8 @@ classdef background < handle
             obj.barriers = obj.grassMatrix + obj.brickMatrix;
         end
         %=================================================================
-        function obj = resetMap(obj, level)
+        function obj = resetMap(obj)
+            level = randi([1, 3]);
             obj.grassMatrix = obj.borderArray;
             obj.grassMatrix = obj.grassMatrix + obj.grassAlt(:,:,level);
             obj.brickMatrix = obj.brickAlt(:,:,level);

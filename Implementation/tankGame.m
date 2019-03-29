@@ -15,70 +15,72 @@ function main()
     p2 = tank(1, 1, 'resources\tank2.png', bg); % wasd control 
     init(); % initlizing parameters
     
-    %start playing music 
+    %start playing music and start loading screen 
     play(bg.music);
     loadingScreen();
     
     while(game.on)
         delete(get(gca,'Children')); %clear plot
-        
-        if game.botMatch
-            p2.decision(); end
-        
-        if  (p1.fire == 1) 
-            p1.fireAttempt(); p1.fire = 0; end
-        if  (p2.fire == 1) 
-            p2.fireAttempt(); p2.fire = 0; end
-            
-        p1.checkStatus(); p2.checkStatus();
-        checkBullets(p1, p2);
-        checkBullets(p2, p1);
-        
-        imagesc(0, 0, bg.value);
-        imagesc(p1.inMapX, p1.inMapY, p1.value);
-        imagesc(p2.inMapX, p2.inMapY, p2.value);
-        scatter(p1.shells.Xs, p1.shells.Ys, p1.shells.dia, p1.shells.color, 'filled');
-        scatter(p2.shells.Xs, p2.shells.Ys, p2.shells.dia, p2.shells.color, 'filled');
-        
-        if (p1.health <= 0)
-            game.p1Streak = 0;
-            if (game.lastWinner == "p2" || game.lastWinner == "null")
-                game.p2Streak = game.p2Streak + 1;
-                if (game.p2Streak == 1)
-                    play(game.firstBloodSound)
-                elseif (game.p2Streak == 2)
-                    play(game.doubleKillSound)
-                elseif (game.p2Streak == 3)
-                    play(game.dominatingSound)
-                end
-            end
-            game.lastWinner = "p2";
-            respawn(p1, false);
-        end
-        if (p2.health <= 0)
-            game.p2Streak = 0;
-            if (game.lastWinner == "p1"  || game.lastWinner == "null")
-                game.p1Streak = game.p1Streak + 1;
-                if (game.p1Streak == 1)
-                    play(game.firstBloodSound)
-                elseif (game.p1Streak == 2)
-                    play(game.doubleKillSound)
-                elseif (game.p1Streak == 3)
-                    play(game.dominatingSound)
-                end
-            end
-            game.lastWinner = "p1";
-            respawn(p2, false);
-        end
-        
         if (p1.lifes == 0 || p2.lifes == 0)
-            game.level = game.level + 1;
-            bg.resetMap(game.level);
-            bg.generateImage();
-            respawn(p1, true); respawn(p2, true);
+            ending();
+            loadingScreen();
+            
+        % main game   
+        else
+            if game.botMatch
+                p2.decision(); end
+
+            if  (p1.fire == 1) 
+                p1.fireAttempt(); p1.fire = 0; end
+            if  (p2.fire == 1) 
+                p2.fireAttempt(); p2.fire = 0; end
+
+            p1.checkStatus(); p2.checkStatus();
+            checkBullets(p1, p2);
+            checkBullets(p2, p1);
+
+            imagesc(0, 0, bg.value);
+            imagesc(p1.inMapX, p1.inMapY, p1.value);
+            imagesc(p2.inMapX, p2.inMapY, p2.value);
+            scatter(p1.shells.Xs, p1.shells.Ys, p1.shells.dia, p1.shells.color, 'filled');
+            scatter(p2.shells.Xs, p2.shells.Ys, p2.shells.dia, p2.shells.color, 'filled');
+
+            if (p1.health <= 0)
+                game.p1Streak = 0;
+                if (game.lastWinner == "p2" || game.lastWinner == "null")
+                    game.p2Streak = game.p2Streak + 1;
+                    if (game.p2Streak == 1 && game.firstBloodTaken == 0)
+                        play(game.firstBloodSound)
+                        game.firstBloodTaken
+                    elseif (game.p2Streak == 2)
+                        play(game.doubleKillSound)
+                    elseif (game.p2Streak == 3)
+                        play(game.dominatingSound)
+                    end
+                end
+                game.lastWinner = "p2";
+                respawn(p1, false);
+            end
+            if (p2.health <= 0)
+                game.p2Streak = 0;
+                if (game.lastWinner == "p1"  || game.lastWinner == "null")
+                    game.p1Streak = game.p1Streak + 1;
+                    if (game.p1Streak == 1 && game.firstBloodTaken == 0)
+                        play(game.firstBloodSound)
+                        game.firstBloodTaken = 1;
+                    elseif (game.p1Streak == 2)
+                        play(game.doubleKillSound)
+                    elseif (game.p1Streak == 3)
+                        play(game.dominatingSound)
+                    end
+                end
+                game.lastWinner = "p1";
+                respawn(p2, false);
+            end
         end
         
         scoreBoardUpdate();
+
         drawnow; % update plot
         pause(0.1);
     end
@@ -98,6 +100,7 @@ function init()
     game.on = true;    
     game.botMatch = 0;               % place holder for bot status
     game.level = 1;
+    game.firstBloodTaken = 0;
     game.UI = figure('menubar','none',...
                'numbertitle','off'); % cancel menu bar
     game.lastWinner = "null";        % for recording kill streak
@@ -112,6 +115,9 @@ function init()
         'resources\killSound\doubleKillStd.mp3'), 44100);
     game.dominatingSound = audioplayer(audioread( ...
         'resources\killSound\dominatingStd.mp3'), 44100);
+    
+    game.ending.index = 0;
+    game.ending.in = 0;
     
     game.offsetX = bg.length + 16;
     game.offsetY = bg.length - bg.multiplier - 16 : -bg.multiplier : bg.length-16*bg.multiplier ;
@@ -148,10 +154,16 @@ function pressKey(~, ed)
         case 'l'
             p1.fire = 1;
             
-        case 'p'
+        case 'o'
             game.loading.index = game.loading.index - 1;
+            if game.ending.in
+                game.ending.index = ~game.ending.index;
+            end
         case 'return'
             game.loading.undecided = 0;
+            if game.ending.in
+                game.ending.decided = ~game.ending.decided;
+            end
     end
     
     % player two
@@ -166,7 +178,7 @@ function pressKey(~, ed)
                 p2.move("up");
             case 's'             
                 p2.move("down");
-            case 'e' 
+            case 'r' 
                 p2.fire = 1;
         end
     end
@@ -226,13 +238,13 @@ function loadingScreen()
     game.loading.selectY = 7;   % y coordinate of arrow icon
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
-    while(game.loading.undecided)
+    while(game.loading.undecided && game.on)
         delete(get(gca,'Children')); %clear plot
         imagesc(0, 0, game.loading.bgImg);
         xLoc = game.loading.selectX * bg.multiplier; % actual coordinate
         yLoc = (game.loading.selectY + rem(game.loading.index, 2)*2)* bg.multiplier;
         imagesc(xLoc, yLoc, game.loading.selImg);
-        imagesc(bg.length, 0, bg.scoreBoard);
+        imagesc(bg.length, 0, bg.instrImg);
         drawnow;
         pause(0.1);
     end
@@ -260,10 +272,6 @@ function scoreBoardUpdate()
     p2Streak = setStreak(game.p2Streak);
     imagesc(bg.length, 0, bg.scoreBoard);
     
-    % title
-    text(game.offsetX, game.offsetY(1), '  TANK', 'color', 'white')
-    text(game.offsetX, game.offsetY(2), 'COMMANDER', 'color', 'white')
-    
     % player one info
     text(game.offsetX, game.offsetY(4), 'Player 1:', 'color', 'white')
     text(game.offsetX, game.offsetY(5), '  Life: ', 'color', 'white')
@@ -275,7 +283,6 @@ function scoreBoardUpdate()
     text(game.offsetX, game.offsetY(6), ['  HP:   ' p1Health], 'color', 'white')
     imagesc(game.offsetX, game.offsetY(7) - 16, p1Streak);
 
-    
     % player two info
     text(game.offsetX, game.offsetY(10), 'Player 2:', 'color', 'white')
     text(game.offsetX, game.offsetY(11), '  Life: ', 'color', 'white')
@@ -305,3 +312,53 @@ function img = setStreak(streak)
     end
 end
 
+function ending()
+    % ending screen
+    global game; global bg;
+    global p1; global p2;
+    game.ending.in = 1;
+    game.ending.decided = 0;
+    
+    % decide what to say based on who wins
+    if game.botMatch % if bot wins
+        if p1.lifes == 0
+            switch randi([1, 2])
+                case 1
+                    finalImg = bg.aiWin1;
+                case 2
+                    finalImg = bg.aiWin2;
+            end
+        end
+    else % if human player wins
+        if p1.lifes == 0
+            finalImg = bg.p2Win;
+        else
+            finalImg = bg.p1Win;
+        end
+    end
+    
+    % `while` ensures to stay in ending screen
+    while (~game.ending.decided && game.on)
+        delete(get(gca,'Children'));
+        imagesc(0, 0, bg.ending);
+        imagesc(2*bg.multiplier, 9*bg.multiplier, finalImg)
+        imagesc(6*bg.multiplier, (5-2*game.ending.index)*bg.multiplier,...
+            game.loading.selImg);
+        scoreBoardUpdate();
+        drawnow;
+        pause(0.1);
+    end
+    
+    % decides whether to restart or quite
+    if game.ending.index 
+        game.on = 0;
+    else
+        respawn(p2, true);
+        respawn(p1, true);
+        bg.resetMap();
+        bg.generateImage();
+        game.p1Streak = 0;
+        game.p2Streak = 0;
+    end
+    game.ending.in = 0;
+end

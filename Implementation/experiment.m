@@ -1,1 +1,1 @@
-A = background(16, 32);
+beep

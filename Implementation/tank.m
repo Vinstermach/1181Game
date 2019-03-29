@@ -15,11 +15,10 @@ classdef tank < handle
         health;      % current health
         dir;         % facing direction
         
-        range = 12;  % effective range of bullet
         fire = 0;    % whether player press the key to fire
         fireCD = 6;  % time interval between each shot
         countDown = 0;   % CD from last attack
-        shells = bullets(10);  % alias of `bullets`
+        shells = bullets(8);  % alias of `bullets`
         
         birthX;      % relative coordintes of tanks' birth place
         birthY;      
@@ -139,14 +138,14 @@ classdef tank < handle
             end
         end
         %==================================================================
-        function decision(obj)
-            %hard code this as AI algorithm 
+        function obj = decision(obj)
+            % hard code this as AI algorithm 
             if (randi([0, 1])) %random move in x or y
                 if (obj.opponent.x > obj.x)
                     obj.move("right");
                 elseif (obj.opponent.x < obj.x)
                     obj.move("left");
-                end  
+                end
             else
                 if (obj.opponent.y > obj.y)
                     obj.move("up");
@@ -171,6 +170,10 @@ classdef tank < handle
                 end
             end
             
+        end
+        %==================================================================
+        function obj = hasBarrier(obj)
+            % working...
         end
     end
         
