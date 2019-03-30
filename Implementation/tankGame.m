@@ -22,9 +22,9 @@ function main()
     while(game.on)
         delete(get(gca,'Children')); %clear plot
         if (p1.lifes == 0 || p2.lifes == 0)
+            pause(0.5);
             ending();
             loadingScreen();
-            
         % main game   
         else
             if game.botMatch
@@ -51,7 +51,7 @@ function main()
                     game.p2Streak = game.p2Streak + 1;
                     if (game.p2Streak == 1 && game.firstBloodTaken == 0)
                         play(game.firstBloodSound)
-                        game.firstBloodTaken
+                        game.firstBloodTaken = 1;
                     elseif (game.p2Streak == 2)
                         play(game.doubleKillSound)
                     elseif (game.p2Streak == 3)
@@ -99,7 +99,6 @@ function init()
     
     game.on = true;    
     game.botMatch = 0;               % place holder for bot status
-    game.level = 1;
     game.firstBloodTaken = 0;
     game.UI = figure('menubar','none',...
                'numbertitle','off'); % cancel menu bar
@@ -305,8 +304,6 @@ function img = setStreak(streak)
             img = game.firstBlood;
         case 2
             img = game.doubleKill;
-        case 3
-            img = game.dominating;
         otherwise
             img = game.dominating;
     end
@@ -320,6 +317,7 @@ function ending()
     game.ending.decided = 0;
     
     % decide what to say based on who wins
+    finalImg = bg.p1Win;
     if game.botMatch % if bot wins
         if p1.lifes == 0
             switch randi([1, 2])
@@ -332,8 +330,6 @@ function ending()
     else % if human player wins
         if p1.lifes == 0
             finalImg = bg.p2Win;
-        else
-            finalImg = bg.p1Win;
         end
     end
     
@@ -359,6 +355,7 @@ function ending()
         bg.generateImage();
         game.p1Streak = 0;
         game.p2Streak = 0;
+        game.firstBloodTaken = 0;
     end
     game.ending.in = 0;
 end
