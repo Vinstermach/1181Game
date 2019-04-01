@@ -60,7 +60,7 @@
       let player one try to fire;
       
     if O key is pressed
-      move the option iscon;
+      move the option icon;
     if Enter key is pressed
       confirm current option;
     
@@ -82,11 +82,47 @@
       }  
     } 
   }
+  
+  startScreen() { # start displaying the start screen;
+    while the user havn'e make decision {
+      clear former images; 
+      display image asking whether player want to play against bot or another player;
+      display the selection icon; 
+      update the game screen;
+      pause 0.1 second;
+    }
+    get user decision; 
+  }
+  
+  respawn() {
+    reset player location;
+    reset player HP;
+    decrease player lifes by 1;
+  }
+  
+  scoreboardUpdate() {
+    display players' remaining lifes;
+    display players' HP;
+    if there's killing streak
+      display killing streak; 
+  }
+  
+  endingScren() {
+    display the winner;
+    while the user havn'e make decision {
+      clear former images; 
+      display image asking if the player want another round;
+      display the selection icon;
+      update the game screen;
+      pause 0.1 second;
+    }
+    get user decision; 
+  }
   ```
 
 # Current goal of game implementation  
 
-1. Starting and ending animation
+1. empty HP after death
 2. A better Computer opponent algorithm 
 3. Killing streak and appearance improvement
 
