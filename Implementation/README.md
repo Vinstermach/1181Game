@@ -1,6 +1,25 @@
 # File explanation and pseudocode:  
 
 * `background.m`: the class definition file for background.
+  ```python
+  background() { # initlize the background 
+    read images need for the background;
+    set the background to a certain size;
+    reset the map;
+    generate the image of backgound;
+  }
+  
+  generateImage() {
+    iterate through the array of grass and rick {
+      place the image of grass/brick if the corresponding array value is True; 
+    }   
+  }
+  
+  resetMap() {
+    randomly select a number from 1 to 3;
+    read the map info for that number index; 
+  }
+  ```
 * `basicStructure.m`: provides basic idea of implementing keyboard interaction in MatLab. 
 * `bullet.m`: the class definition file for single bullet, including bullet coordinates and direction.
 * `bullets.m`: the class definition file for all bullets - a collection of object instance `bullet`.
