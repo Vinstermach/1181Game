@@ -272,8 +272,8 @@ function scoreBoardUpdate()
     imagesc(bg.length, 0, bg.scoreBoard);
     
     % player one info
-    text(game.offsetX, game.offsetY(4), 'Player 1:', 'color', 'white')
-    text(game.offsetX, game.offsetY(5), '  Life: ', 'color', 'white')
+    text(game.offsetX, game.offsetY(4), 'Player 1:', 'color', 'white');
+    text(game.offsetX, game.offsetY(5), '  Life: ', 'color', 'white');
     imgLocX = game.offsetX + 2*bg.multiplier; 
     for (i = 1 : p1.lifes) % display left life 
         imagesc(imgLocX, game.offsetY(5) - 16, p1.oriValue);
@@ -283,8 +283,8 @@ function scoreBoardUpdate()
     imagesc(game.offsetX, game.offsetY(7) - 16, p1Streak);
 
     % player two info
-    text(game.offsetX, game.offsetY(10), 'Player 2:', 'color', 'white')
-    text(game.offsetX, game.offsetY(11), '  Life: ', 'color', 'white')
+    text(game.offsetX, game.offsetY(10), 'Player 2:', 'color', 'white');
+    text(game.offsetX, game.offsetY(11), '  Life: ', 'color', 'white');
     imgLocX = game.offsetX + 2*bg.multiplier;
     for (i = 1 : p2.lifes)
         imagesc(imgLocX, game.offsetY(11) - 16, p2.oriValue);
