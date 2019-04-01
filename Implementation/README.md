@@ -6,8 +6,42 @@
 * `bullets.m`: the class definition file for all bullets - a collection of object instance `bullet`.
 * `experiment.m`: just like the name, it is a temporary file providing experimental implementation, with no actual usage. 
 * `tank.m`: the class definition file for tank. Decides how tank interact with the environment, also has the hard-coded AI algorithm. 
+  ```python 
+  tank() { # initlize the tank 
+    set the birth location of tank;
+    read and generate the image of tank;
+  }
+
+  checkStatus() {
+    update tank's fire cooldown;
+    update tank image based on its orientation; 
+    translate tank's relative location to absolute location in the game window; 
+  }
+  
+  fireAttempt() {
+    if the player's fire cooldown is 0
+      add a bullet;
+  }
+  
+  opponentAhead() {
+    if the opponent is in the location player intended to move to
+      surpress that movement;
+  }
+  
+  move() {
+    if there's no block and the opponent is not here
+      move to that position; 
+  }
+  
+  decision() {
+    find the location of player;
+    randomly move on x or y axis towards the player; 
+    if the player is ahead
+      try to fire at the player; 
+  }
+  ```
 * `tankGame.m`: main game file. Run this file to start the game. 
-  ``` python
+  ```python
   main() {
     initilize background;
     initilize player one's tank;
