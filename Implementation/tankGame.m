@@ -47,11 +47,11 @@ function main()
 
             if (p1.health <= 0)
                 game.p1Streak = 0;
+                game.p2Streak = game.p2Streak + 1;
+                game.totalKill = game.totalKill + 1;
                 if (game.lastWinner == "p2" || game.lastWinner == "null")
-                    game.p2Streak = game.p2Streak + 1;
                     if (game.p2Streak == 1 && game.firstBloodTaken == 0)
                         play(game.firstBloodSound)
-                        game.firstBloodTaken = 1;
                     elseif (game.p2Streak == 2)
                         play(game.doubleKillSound)
                     elseif (game.p2Streak == 3)
@@ -63,11 +63,11 @@ function main()
             end
             if (p2.health <= 0)
                 game.p2Streak = 0;
+                game.p1Streak = game.p1Streak + 1;
+                game.totalKill = game.totalKill + 1;
                 if (game.lastWinner == "p1"  || game.lastWinner == "null")
-                    game.p1Streak = game.p1Streak + 1;
                     if (game.p1Streak == 1 && game.firstBloodTaken == 0)
                         play(game.firstBloodSound)
-                        game.firstBloodTaken = 1;
                     elseif (game.p1Streak == 2)
                         play(game.doubleKillSound)
                     elseif (game.p1Streak == 3)
@@ -105,6 +105,7 @@ function init()
     game.lastWinner = "null";        % for recording kill streak
     game.p1Streak = 0;
     game.p2Streak = 0;
+    game.totalKill = 0;
     game.firstBlood = flip(imread('resources\firstBlood.png'));
     game.doubleKill = flip(imread('resources\doubleKill.png'));
     game.dominating = flip(imread('resources\dominating.png'));
@@ -262,13 +263,41 @@ function respawn(player, resetLife)
         player.lifes = 3; end
 end
 
+%% Other other Functions
 function scoreBoardUpdate()
     global game; global bg; 
     global p1; global p2;
     p1Health = int2str(p1.health);
     p2Health = int2str(p2.health);
-    p1Streak = setStreak(game.p1Streak); 
-    p2Streak = setStreak(game.p2Streak);
+    switch game.p1Streak
+        case 0 
+            p1Streak = 0;
+        case 1 
+            if game.totalKill == 1
+                p1Streak = game.firstBlood;
+            else
+                p1Streak = 0;
+            end
+        case 2
+            p1Streak = game.doubleKill;
+        otherwise
+            p1Streak = game.dominating;
+    end
+    switch game.p2Streak
+        case 0 
+            p2Streak = 0;
+        case 1 
+            if game.totalKill == 1
+                p2Streak = game.firstBlood;
+            else
+                p2Streak = 0;
+            end
+        case 2
+            p2Streak = game.doublKill;
+        otherwise
+            p2Streak = game.dominating;
+    end
+
     imagesc(bg.length, 0, bg.scoreBoard);
     
     % player one info
