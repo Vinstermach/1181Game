@@ -20,6 +20,9 @@ function main()
     loadingScreen();
     
     while(game.on)
+        if game.showHelp
+            helpScreen();
+        end
         delete(get(gca,'Children')); %clear plot
         if (p1.lifes == 0 || p2.lifes == 0)
             pause(0.5);
@@ -98,6 +101,7 @@ function init()
     p1.opponent = p2; p2.opponent = p1; 
     
     game.on = true;    
+    game.showHelp = 0;
     game.botMatch = 0;               % place holder for bot status
     game.firstBloodTaken = 0;
     game.UI = figure('menubar','none',...
@@ -116,6 +120,7 @@ function init()
     game.dominatingSound = audioplayer(audioread( ...
         'resources\killSound\dominatingStd.mp3'), 44100);
     
+    game.helpImg = flip(imread('resources\helpScreen.png'));
     game.ending.index = 0;
     game.ending.in = 0;
     
@@ -139,47 +144,51 @@ end
 function pressKey(~, ed)
     global game;
     global p1; global p2;
-    switch ed.Key
-        case 'q'
-            game.on = 0;
-        % player one
-        case 'leftarrow' 
-            p1.move("left");
-        case 'rightarrow'  
-            p1.move("right");
-        case 'uparrow'       
-            p1.move("up");
-        case 'downarrow' 
-            p1.move("down");
-        case 'l'
-            p1.fire = 1;
-            
-        case 'o'
-            game.loading.index = game.loading.index - 1;
-            if game.ending.in
-                game.ending.index = ~game.ending.index;
-            end
-        case 'return'
-            game.loading.undecided = 0;
-            if game.ending.in
-                game.ending.decided = ~game.ending.decided;
-            end
-    end
-    
-    % player two
-    if (~ game.botMatch)
-        
+    if  game.showHelp == 0
         switch ed.Key
-            case 'a' 
-                p2.move("left");
-            case 'd'  
-                p2.move("right");
-            case 'w' 
-                p2.move("up");
-            case 's'             
-                p2.move("down");
-            case 'r' 
-                p2.fire = 1;
+            case 'q'
+                game.on = 0;
+            % player one
+            case 'leftarrow' 
+                p1.move("left");
+            case 'rightarrow'  
+                p1.move("right");
+            case 'uparrow'       
+                p1.move("up");
+            case 'downarrow' 
+                p1.move("down");
+            case 'l'
+                p1.fire = 1;
+
+            case 'o'
+                game.loading.index = game.loading.index - 1;
+                if game.ending.in
+                    game.ending.index = ~game.ending.index;
+                end
+            case 'return'
+                game.loading.undecided = 0;
+                if game.ending.in
+                    game.ending.decided = ~game.ending.decided;
+                end
+            case 'h'
+                game.showHelp = 1;
+        end
+
+        % player two
+        if (~ game.botMatch)
+
+            switch ed.Key
+                case 'a' 
+                    p2.move("left");
+                case 'd'  
+                    p2.move("right");
+                case 'w' 
+                    p2.move("up");
+                case 's'             
+                    p2.move("down");
+                case 'r' 
+                    p2.fire = 1;
+            end
         end
     end
 end
@@ -239,6 +248,9 @@ function loadingScreen()
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
     while(game.loading.undecided && game.on)
+        if game.showHelp
+            helpScreen();
+        end
         delete(get(gca,'Children')); %clear plot
         imagesc(0, 0, game.loading.bgImg);
         xLoc = game.loading.selectX * bg.multiplier; % actual coordinate
@@ -293,7 +305,7 @@ function scoreBoardUpdate()
                 p2Streak = 0;
             end
         case 2
-            p2Streak = game.doublKill;
+            p2Streak = game.doubleKill;
         otherwise
             p2Streak = game.dominating;
     end
@@ -324,20 +336,6 @@ function scoreBoardUpdate()
  
 end
 
-function img = setStreak(streak)
-    global game;
-    switch streak
-        case 0
-            img = 0;
-        case 1
-            img = game.firstBlood;
-        case 2
-            img = game.doubleKill;
-        otherwise
-            img = game.dominating;
-    end
-end
-
 function ending()
     % ending screen
     global game; global bg;
@@ -346,6 +344,7 @@ function ending()
     game.ending.decided = 0;
     
     % decide what to say based on who wins
+    instractorMode = 0;
     finalImg = bg.p1Win;
     if game.botMatch % if bot wins
         if p1.lifes == 0
@@ -353,7 +352,11 @@ function ending()
                 case 1
                     finalImg = bg.aiWin1;
                 case 2
-                    finalImg = bg.aiWin2;
+                    if ~instractorMode
+                        finalImg = bg.aiWin2;
+                    else
+                        finalImg = bg.aiWin1;
+                    end
             end
         end
     else % if human player wins
@@ -388,3 +391,18 @@ function ending()
     end
     game.ending.in = 0;
 end
+
+function helpScreen()
+    global game;
+    imagesc(0, 0, game.helpImg);
+    inKey = 'f';
+    while (inKey ~= 'h' && inKey ~= 'q')
+        waitforbuttonpress;
+        inKey = get(game.UI,'CurrentKey');
+        if (inKey == 'h' || inKey == 'q')
+            game.showHelp = 0;
+            return
+        end
+    end
+end
+

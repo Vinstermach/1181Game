@@ -172,8 +172,50 @@ classdef tank < handle
             
         end
         %==================================================================
-        function obj = hasBarrier(obj)
-            % working...
+        
+        function obj = decisionAdvanced(obj)
+            moveUpWeight = 0;
+            moveDownWeight = 0;
+            moveLeftWeight = 0;
+            moveRightWeight = 0;
+            
+            if (obj.opponent.x > obj.x)
+                moveRightWeight = moveRightWeight + 5;
+            elseif (obj.opponent.x < obj.x)
+                moveLeftWeight = moveLeftWeight + 5;
+            elseif (obj.opponent.y > obj.y)
+                moveUpWeight = moveUpWeight + 5;
+            elseif (obj.opponent.y < obj.y)
+                moveDownWeight = moveDownWeight + 5;
+            end  
+            
+            % plus random weight
+            moveUpWeight = moveUpWeight + rand();
+            moveDownWeight = moveDownWeight + rand();
+            moveLeftWeight = moveLeftWeight + rand();
+            moveRightWeight = moveRightWeight + rand();
+            
+            % mask unaviliabe path
+            moveUpWeight = moveUpWeight * ~obj.bg.barriers(obj.y+2, obj.x+1);
+            moveDownWeight = moveDownWeight * ~obj.bg.barriers(obj.y, obj.x+1);
+            moveLeftWeight = moveLeftWeight * ~obj.bg.barriers(obj.y+1, obj.x);
+            moveRightWeight = moveRightWeight * ~obj.bg.barriers(obj.y+1, obj.x+2);
+            
+            % shoot if the player is ahead
+            if (obj.x == obj.opponent.x)
+                if (obj.y < obj.opponent.y && obj.dir == "up")
+                    obj.fireAttempt();
+                elseif (obj.y > obj.opponent.y && obj.dir == "down")
+                    obj.fireAttempt();
+                end
+            end
+            if (obj.y == obj.opponent.y)
+                if (obj.x > obj.opponent.x && obj.dir == "left")
+                    obj.fireAttempt();
+                elseif (obj.x < obj.opponent.x && obj.dir == "right")
+                    obj.fireAttempt();
+                end
+            end
         end
     end
         
