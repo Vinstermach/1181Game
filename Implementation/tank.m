@@ -18,7 +18,7 @@ classdef tank < handle
         fire = 0;    % whether player press the key to fire
         fireCD = 6;  % time interval between each shot
         countDown = 0;   % CD from last attack
-        shells = bullets(8);  % alias of `bullets`
+        shells;  % alias of `bullets`
         
         birthX;      % relative coordintes of tanks' birth place
         birthY;      
@@ -43,6 +43,7 @@ classdef tank < handle
             obj.leftValue = imrotate(obj.oriValue, -90,'bilinear');
             obj.rightValue = imrotate(obj.oriValue, 90,'bilinear');
             obj.bg = BG;
+            obj.shells = bullets(8);
             obj.shells.bg = BG;
         end
         %==================================================================

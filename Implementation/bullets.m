@@ -6,7 +6,7 @@ classdef bullets < handle
         range; % effective range of bullet
         Xs;    % absolute coordintes in the plot
         Ys;
-        dia = 5;   % size of the bullet, only used in `scatter()`
+        dia = 7;   % size of the bullet, only used in `scatter()`
         color = 'w';     % color of the bullets
     end
     
@@ -37,16 +37,16 @@ classdef bullets < handle
                 
                 if (obj.listOfBul(i).direction == "up") && ...
                         (obj.bg.barriers(obj.listOfBul(i).y+2, obj.listOfBul(i).x+1) ~= 1)
-                    obj.listOfBul(i).y = obj.listOfBul(i).y + 1;
+                    obj.listOfBul(i).y = obj.listOfBul(i).y + 2;
                 elseif (obj.listOfBul(i).direction == "down") && ...
                         (obj.bg.barriers(obj.listOfBul(i).y, obj.listOfBul(i).x+1) ~= 1)
-                    obj.listOfBul(i).y = obj.listOfBul(i).y - 1;
+                    obj.listOfBul(i).y = obj.listOfBul(i).y - 2;
                 elseif (obj.listOfBul(i).direction == "left") && ...
                         (obj.bg.barriers(obj.listOfBul(i).y+1, obj.listOfBul(i).x) ~= 1)
-                    obj.listOfBul(i).x = obj.listOfBul(i).x - 1;
+                    obj.listOfBul(i).x = obj.listOfBul(i).x - 2;
                 elseif (obj.listOfBul(i).direction == "right") && ...
                         (obj.bg.barriers(obj.listOfBul(i).y+1, obj.listOfBul(i).x+2) ~= 1)
-                    obj.listOfBul(i).x = obj.listOfBul(i).x + 1;
+                    obj.listOfBul(i).x = obj.listOfBul(i).x + 2;
                 else
                     outdates = [outdates, i];
                 end

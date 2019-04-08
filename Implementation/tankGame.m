@@ -20,8 +20,8 @@ function main()
     loadingScreen();
     
     while(game.on)
-        if game.showHelp
-            helpScreen();
+        if game.pause.in
+            pauseScreen();
         end
         delete(get(gca,'Children')); %clear plot
         if (p1.lifes == 0 || p2.lifes == 0)
@@ -99,6 +99,8 @@ function init()
     global p1; global p2;
     p1.dir = "up"; p2.dir = "down";  % initial direction
     p1.opponent = p2; p2.opponent = p1; 
+    p1.shells.color = 'r';
+    p2.shells.color = 'g';
     
     game.on = true;    
     game.showHelp = 0;
@@ -120,9 +122,13 @@ function init()
     game.dominatingSound = audioplayer(audioread( ...
         'resources\killSound\dominatingStd.mp3'), 44100);
     
-    game.helpImg = flip(imread('resources\helpScreen.png'));
     game.ending.index = 0;
     game.ending.in = 0;
+    game.pause.pauseImg = flip(imread('resources\helpScreen.png'));
+    game.pause.decided = 0;
+    game.pause.index = 0;
+    game.pause.in = 0;
+    
     
     game.offsetX = bg.length + 16;
     game.offsetY = bg.length - bg.multiplier - 16 : -bg.multiplier : bg.length-16*bg.multiplier ;
@@ -144,11 +150,10 @@ end
 function pressKey(~, ed)
     global game;
     global p1; global p2;
-    if  game.showHelp == 0
+    
+    % player one control 
+    if ~game.pause.in
         switch ed.Key
-            case 'q'
-                game.on = 0;
-            % player one
             case 'leftarrow' 
                 p1.move("left");
             case 'rightarrow'  
@@ -159,36 +164,50 @@ function pressKey(~, ed)
                 p1.move("down");
             case 'l'
                 p1.fire = 1;
-
-            case 'o'
-                game.loading.index = game.loading.index - 1;
-                if game.ending.in
-                    game.ending.index = ~game.ending.index;
-                end
-            case 'return'
-                game.loading.undecided = 0;
-                if game.ending.in
-                    game.ending.decided = ~game.ending.decided;
-                end
-            case 'h'
-                game.showHelp = 1;
         end
-
-        % player two
-        if (~ game.botMatch)
-
-            switch ed.Key
-                case 'a' 
-                    p2.move("left");
-                case 'd'  
-                    p2.move("right");
-                case 'w' 
-                    p2.move("up");
-                case 's'             
-                    p2.move("down");
-                case 'r' 
-                    p2.fire = 1;
+    end
+    
+    % common keys
+    switch ed.Key
+        case 'o'
+            if ~game.pause.in
+                game.loading.index = game.loading.index - 1;
             end
+            if game.ending.in && ~game.pause.in
+                game.ending.index = ~game.ending.index;
+            end
+            if game.pause.in
+                game.pause.index = game.pause.index + 1;
+            end
+        case 'return'
+            if ~game.pause.in
+                game.loading.undecided = 0;
+            end
+            if game.ending.in && ~game.pause.in
+                game.ending.decided = ~game.ending.decided;
+            end
+            if game.pause.in
+                game.pause.decided = game.pause.decided + 1;
+            end
+        case 'p'
+            game.pause.in = ~game.pause.in;
+        case 'q'
+            game.on = 0;
+    end
+
+    % player two
+    if (~ game.botMatch && ~ game.pause.in)
+        switch ed.Key
+            case 'a' 
+                p2.move("left");
+            case 'd'  
+                p2.move("right");
+            case 'w' 
+                p2.move("up");
+            case 's'             
+                p2.move("down");
+            case 'r' 
+                p2.fire = 1;
         end
     end
 end
@@ -248,8 +267,8 @@ function loadingScreen()
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
     while(game.loading.undecided && game.on)
-        if game.showHelp
-            helpScreen();
+        if game.pause.in
+            pauseScreen();
         end
         delete(get(gca,'Children')); %clear plot
         imagesc(0, 0, game.loading.bgImg);
@@ -392,16 +411,36 @@ function ending()
     game.ending.in = 0;
 end
 
-function helpScreen()
-    global game;
-    imagesc(0, 0, game.helpImg);
-    inKey = 'f';
-    while (inKey ~= 'h' && inKey ~= 'q')
-        waitforbuttonpress;
-        inKey = get(game.UI,'CurrentKey');
-        if (inKey == 'h' || inKey == 'q')
-            game.showHelp = 0;
-            return
+function pauseScreen()
+    global game; global bg;
+    game.pause.decided = 0;
+    
+    while(game.pause.in && game.on)
+        remd = rem(game.pause.index, 4);
+        delete(get(gca,'Children'));
+        imagesc(0, 0, game.pause.pauseImg);
+        imagesc(2*bg.multiplier, (9-2*remd)*bg.multiplier,...
+            game.loading.selImg);
+        if game.loading.undecided
+            imagesc(bg.length, 0, bg.instrImg);
+        else
+            scoreBoardUpdate();
+        end
+        drawnow;
+        pause(0.1);
+        
+        if game.pause.decided
+            switch remd
+                case 0
+                    web('http://boards.4channel.org/a/');
+                case 1
+                    web('https://stackoverflow.com/');
+                case 2
+                    web('https://www.apple.com/');
+                case 3
+                    web('https://store.steampowered.com/');
+            end
+            game.pause.decided = 0;
         end
     end
 end

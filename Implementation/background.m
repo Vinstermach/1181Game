@@ -33,7 +33,7 @@ classdef background < handle
             obj.multiplier = Multiplier;
             obj.length = obj.scale * obj.multiplier;
             obj.extraLen = 6;
-            obj.grassImg = imread('resources\Grass.png');
+            obj.grassImg = flip(imread('resources\Grass.png'));
             obj.brickImg = imread('resources\bricks.png');
             obj.scoreBoard = flip(imread('resources\scoreBoard.png'));
             obj.instrImg = flip(imread('resources\scoreBoardInst.png'));
