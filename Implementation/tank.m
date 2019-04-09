@@ -180,13 +180,17 @@ classdef tank < handle
             moveRightWeight = 0;
             
             if (obj.opponent.x > obj.x)
-                moveRightWeight = moveRightWeight + obj.opponent.x - obj.x;
+                dist = 2 * (obj.opponent.x - obj.x);
+                moveRightWeight = moveRightWeight + dist;
             elseif (obj.opponent.x < obj.x)
-                moveLeftWeight = moveLeftWeight + obj.x - obj.opponent.x ;
+                dist = 3 * (obj.x - obj.opponent.x)
+                moveLeftWeight = moveLeftWeight + dist
             elseif (obj.opponent.y > obj.y)
-                moveUpWeight = moveUpWeight + obj.opponent.y - obj.y;
+                dist = 2 * (obj.opponent.y - obj.y);
+                moveUpWeight = moveUpWeight + dist;
             elseif (obj.opponent.y < obj.y)
-                moveDownWeight = moveDownWeight + obj.y - obj.opponent.y;
+                dist = 2 * (obj.y - obj.opponent.y);
+                moveDownWeight = moveDownWeight + dist;
             end  
             
             % plus random weight
@@ -196,12 +200,29 @@ classdef tank < handle
             moveRightWeight = moveRightWeight + rand();
             
             % mask unaviliabe path
-            moveUpWeight = moveUpWeight * ~obj.bg.barriers(obj.y+2, obj.x+1);
-            moveDownWeight = moveDownWeight * ~obj.bg.barriers(obj.y, obj.x+1);
-            moveLeftWeight = moveLeftWeight * ~obj.bg.barriers(obj.y+1, obj.x);
-            moveRightWeight = moveRightWeight * ~obj.bg.barriers(obj.y+1, obj.x+2);
+            if obj.bg.barriers(obj.y+2, obj.x+1)
+                moveUpWeight = 0;
+                moveLeftWeight = moveLeftWeight + 5;
+                moveRightWeight = moveRightWeight + 5;
+            end
+            if obj.bg.barriers(obj.y, obj.x+1)
+                moveDownWeight = 0;
+                moveLeftWeight = moveLeftWeight + 5;
+                moveRightWeight = moveRightWeight + 5;
+            end
+            if ~obj.bg.barriers(obj.y+1, obj.x)
+                moveLeftWeight = 0;
+                moveUpWeight = moveUpWeight + 5;
+                moveDownWeight = moveDownWeight + 5;
+            end
+            if ~obj.bg.barriers(obj.y+1, obj.x+2)
+                moveRightWeight = 0;
+                moveUpWeight = moveUpWeight + 5;
+                moveDownWeight = moveDownWeight + 5;
+            end      
             
             tempAry = [moveUpWeight; moveDownWeight; moveLeftWeight; moveRightWeight];
+            disp(tempAry);
             [elem, indx] = max(tempAry);
             switch indx
                 case 1

@@ -47,7 +47,7 @@ classdef background < handle
             obj.readArray();
             obj.resetMap();
             obj.generateImage();
-            obj.getMusic();
+            obj.getMusic('resources\musics\red.mp3');
         end
         %=================================================================
         function obj = generateImage(obj)
@@ -82,13 +82,11 @@ classdef background < handle
             obj.barriers = (obj.grassMatrix + obj.brickMatrix) > 0;
         end
         %=================================================================
-        function obj = getMusic(obj)
-            musicLib = ['resources\redAndGoldCasino.wav',...
-                'resources\test.mp3'];
-            obj.soundTrack = audioread('resources\test.mp3')/5;
-            [y,Fs] = audioread('resources\test.mp3');
+        function obj = getMusic(obj, path)
+            obj.soundTrack = audioread(path)/5;
+            [y,Fs] = audioread(path);
             N = length(y);
-            obj.musicLen = N/Fs;
+            obj.musicLen = N/Fs * 0.925;
             obj.music = audioplayer(obj.soundTrack, 44100);
         end
         %=================================================================

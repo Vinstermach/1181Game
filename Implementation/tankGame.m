@@ -21,6 +21,7 @@ function main()
     loadingScreen();
     
     while(game.on)
+        % loop music
         game.tmEnd = toc(game.tmStr);
         if game.tmEnd > bg.musicLen
            stop(bg.music);
@@ -39,7 +40,7 @@ function main()
         % main game   
         else
             if game.botMatch
-                p2.decisionAdvanced(); end
+                p2.decision(); end
 
             if  (p1.fire == 1) 
                 p1.fireAttempt(); p1.fire = 0; end
@@ -467,7 +468,9 @@ function pauseScreen()
                 case 2
                     web('https://www.apple.com/');
                 case 3
-                    web('https://www.youtube.com/watch?v=ZZ5LpwO-An4');
+                    %web('https://www.youtube.com/watch?v=3H6amDbAwlY');
+                    bg.getMusic('resources\musics\tequila.mp3');
+                    play(bg.music);
             end
             game.pause.decided = 0;
         end

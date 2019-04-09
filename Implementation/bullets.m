@@ -36,19 +36,36 @@ classdef bullets < handle
                 
                 if (obj.listOfBul(i).direction == "up") && (obj.listOfBul(i).y <= 14) &&...
                         (obj.bg.barriers(obj.listOfBul(i).y+2, obj.listOfBul(i).x+1) ~= 1)
-                        obj.listOfBul(i).y = obj.listOfBul(i).y + 2;
+                        obj.listOfBul(i).y = obj.listOfBul(i).y + 1;
                 elseif (obj.listOfBul(i).direction == "down") && (obj.listOfBul(i).y >= 3) &&...
                         (obj.bg.barriers(obj.listOfBul(i).y, obj.listOfBul(i).x+1) ~= 1)
-                    obj.listOfBul(i).y = obj.listOfBul(i).y - 2;
+                    obj.listOfBul(i).y = obj.listOfBul(i).y - 1;
                 elseif (obj.listOfBul(i).direction == "left") && (obj.listOfBul(i).x >= 3) &&...
                         (obj.bg.barriers(obj.listOfBul(i).y+1, obj.listOfBul(i).x) ~= 1)
-                    obj.listOfBul(i).x = obj.listOfBul(i).x - 2;
+                    obj.listOfBul(i).x = obj.listOfBul(i).x - 1;
                 elseif (obj.listOfBul(i).direction == "right") && (obj.listOfBul(i).x <= 14) &&...
                         (obj.bg.barriers(obj.listOfBul(i).y+1, obj.listOfBul(i).x+2) ~= 1)
-                    obj.listOfBul(i).x = obj.listOfBul(i).x + 2;
+                    obj.listOfBul(i).x = obj.listOfBul(i).x + 1;
                 else
                     outdates = [outdates, i];
                 end
+                
+                if (obj.listOfBul(i).direction == "up") && (obj.listOfBul(i).y <= 14) &&...
+                        (obj.bg.barriers(obj.listOfBul(i).y+2, obj.listOfBul(i).x+1) ~= 1)
+                        obj.listOfBul(i).y = obj.listOfBul(i).y + 1;
+                elseif (obj.listOfBul(i).direction == "down") && (obj.listOfBul(i).y >= 3) &&...
+                        (obj.bg.barriers(obj.listOfBul(i).y, obj.listOfBul(i).x+1) ~= 1)
+                    obj.listOfBul(i).y = obj.listOfBul(i).y - 1;
+                elseif (obj.listOfBul(i).direction == "left") && (obj.listOfBul(i).x >= 3) &&...
+                        (obj.bg.barriers(obj.listOfBul(i).y+1, obj.listOfBul(i).x) ~= 1)
+                    obj.listOfBul(i).x = obj.listOfBul(i).x - 1;
+                elseif (obj.listOfBul(i).direction == "right") && (obj.listOfBul(i).x <= 14) &&...
+                        (obj.bg.barriers(obj.listOfBul(i).y+1, obj.listOfBul(i).x+2) ~= 1)
+                    obj.listOfBul(i).x = obj.listOfBul(i).x + 1;
+                else
+                    outdates = [outdates, i];
+                end
+                
                 
                 % calculate absloute coordinates of bullets in the plot
                 offset = obj.bg.multiplier / 2;
