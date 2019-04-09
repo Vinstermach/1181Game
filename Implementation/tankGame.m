@@ -17,9 +17,17 @@ function main()
     
     %start playing music and start loading screen 
     play(bg.music);
+    game.tmStr = tic;
     loadingScreen();
     
     while(game.on)
+        game.tmEnd = toc(game.tmStr);
+        if game.tmEnd > bg.musicLen
+           stop(bg.music);
+           play(bg.music); 
+           game.tmStr = tic;
+        end
+        
         if game.pause.in
             pauseScreen();
         end
@@ -88,7 +96,7 @@ function main()
         pause(0.1);
     end
     
-    stop(bg.music)
+    stop(bg.music);
     close(1);
 end
 
@@ -130,13 +138,13 @@ function init()
     game.pause.in = 0;
     
     
-    game.offsetX = bg.length + 16;
-    game.offsetY = bg.length - bg.multiplier - 16 : -bg.multiplier : bg.length-16*bg.multiplier ;
+    game.offsetX = bg.mLength + 16;
+    game.offsetY = bg.mLength - bg.multiplier - 16 : -bg.multiplier : bg.mLength-16*bg.multiplier ;
     % `game.offsetY` is an array recording text loction in scoreBoard
     
     hold on;
-    axis([0, bg.length + bg.extraLen * bg.multiplier, 0, bg.length])
-    game.mainScreen = plot([0, bg.length], [0, bg.length]);
+    axis([0, bg.mLength + bg.extraLen * bg.multiplier, 0, bg.mLength])
+    game.mainScreen = plot([0, bg.mLength], [0, bg.mLength]);
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
     % use `set` instead of waitkey and get
@@ -267,6 +275,13 @@ function loadingScreen()
     
     set(gcf,'WindowKeyPressFcn',@pressKey);
     while(game.loading.undecided && game.on)
+        game.tmEnd = toc(game.tmStr);
+        if game.tmEnd > bg.musicLen
+           stop(bg.music);
+           play(bg.music); 
+           game.tmStr = tic;
+        end
+        
         if game.pause.in
             pauseScreen();
         end
@@ -275,7 +290,7 @@ function loadingScreen()
         xLoc = game.loading.selectX * bg.multiplier; % actual coordinate
         yLoc = (game.loading.selectY + rem(game.loading.index, 2)*2)* bg.multiplier;
         imagesc(xLoc, yLoc, game.loading.selImg);
-        imagesc(bg.length, 0, bg.instrImg);
+        imagesc(bg.mLength, 0, bg.instrImg);
         drawnow;
         pause(0.1);
     end
@@ -329,7 +344,7 @@ function scoreBoardUpdate()
             p2Streak = game.dominating;
     end
 
-    imagesc(bg.length, 0, bg.scoreBoard);
+    imagesc(bg.mLength, 0, bg.scoreBoard);
     
     % player one info
     text(game.offsetX, game.offsetY(4), 'Player 1:', 'color', 'white');
@@ -363,7 +378,7 @@ function ending()
     game.ending.decided = 0;
     
     % decide what to say based on who wins
-    instractorMode = 0;
+    instractorMode = 1;
     finalImg = bg.p1Win;
     if game.botMatch % if bot wins
         if p1.lifes == 0
@@ -386,6 +401,13 @@ function ending()
     
     % `while` ensures to stay in ending screen
     while (~game.ending.decided && game.on)
+        game.tmEnd = toc(game.tmStr);
+        if game.tmEnd > bg.musicLen
+           stop(bg.music);
+           play(bg.music); 
+           game.tmStr = tic;
+        end
+        
         delete(get(gca,'Children'));
         imagesc(0, 0, bg.ending);
         imagesc(2*bg.multiplier, 9*bg.multiplier, finalImg)
@@ -416,13 +438,20 @@ function pauseScreen()
     game.pause.decided = 0;
     
     while(game.pause.in && game.on)
+        game.tmEnd = toc(game.tmStr);
+        if game.tmEnd > bg.musicLen
+           stop(bg.music);
+           play(bg.music); 
+           game.tmStr = tic;
+        end
+        
         remd = rem(game.pause.index, 4);
         delete(get(gca,'Children'));
         imagesc(0, 0, game.pause.pauseImg);
         imagesc(2*bg.multiplier, (9-2*remd)*bg.multiplier,...
             game.loading.selImg);
         if game.loading.undecided
-            imagesc(bg.length, 0, bg.instrImg);
+            imagesc(bg.mLength, 0, bg.instrImg);
         else
             scoreBoardUpdate();
         end

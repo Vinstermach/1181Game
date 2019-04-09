@@ -2,7 +2,7 @@ classdef background < handle
     properties
         scale;       % number of units 
         multiplier;  % the pixel of each unit 
-        length;
+        mLength;
         grassImg;
         brickImg;
         instrImg;    % image ised in loading screen
@@ -15,6 +15,7 @@ classdef background < handle
         barriers;    % blocks that the tanks cannot reach 
         extraLen;    % extend the canvas for score board 
         soundTrack;
+        musicLen;
         music;
         
         grassAlt;
@@ -27,11 +28,12 @@ classdef background < handle
     
     methods
         function obj = background(Scale, Multiplier) %init
+            
             obj.grassAlt = zeros(16, 16, 3);
             obj.brickAlt = [];
             obj.scale = Scale;
             obj.multiplier = Multiplier;
-            obj.length = obj.scale * obj.multiplier;
+            obj.mLength = obj.scale * obj.multiplier;
             obj.extraLen = 6;
             obj.grassImg = flip(imread('resources\Grass.png'));
             obj.brickImg = imread('resources\bricks.png');
@@ -42,15 +44,14 @@ classdef background < handle
             obj.aiWin1 = flip(imread('resources\wins\aiWin1.png'));
             obj.aiWin2 = flip(imread('resources\wins\aiWin2.png'));
             obj.ending = flip(imread('resources\ending.png'));
-            obj.soundTrack = audioread('resources\redAndGoldCasino.wav')/5;
-            obj.music = audioplayer(obj.soundTrack, 44100);
             obj.readArray();
             obj.resetMap();
             obj.generateImage();
+            obj.getMusic();
         end
         %=================================================================
         function obj = generateImage(obj)
-            img = uint8(zeros(obj.length, obj.length, 3));
+            img = uint8(zeros(obj.mLength, obj.mLength, 3));
             
             rowStart = 1;
             for (row = 1 : obj.scale)
@@ -79,6 +80,16 @@ classdef background < handle
             obj.grassMatrix = obj.grassMatrix + obj.grassAlt(:,:,level);
             obj.brickMatrix = obj.brickAlt(:,:,level);
             obj.barriers = (obj.grassMatrix + obj.brickMatrix) > 0;
+        end
+        %=================================================================
+        function obj = getMusic(obj)
+            musicLib = ['resources\redAndGoldCasino.wav',...
+                'resources\test.mp3'];
+            obj.soundTrack = audioread('resources\test.mp3')/5;
+            [y,Fs] = audioread('resources\test.mp3');
+            N = length(y);
+            obj.musicLen = N/Fs;
+            obj.music = audioplayer(obj.soundTrack, 44100);
         end
         %=================================================================
         function obj = readArray(obj)

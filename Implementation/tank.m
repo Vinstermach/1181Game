@@ -1,6 +1,6 @@
 classdef tank < handle
     properties
-        length = 32; % the pixel length of the tank image
+        mLength = 32; % the pixel mLength of the tank image
         oriValue;    % records the original image
         value;       % image used in the plot
         upValue;     % image of tank facing up
