@@ -175,9 +175,8 @@
 
 # Current goal of game implementation  
 
-1. empty HP after death
-2. A better Computer opponent algorithm 
-3. Killing streak and appearance improvement
+1. improce graphics
+2. store
 
 
 
