@@ -40,7 +40,7 @@ function main()
         % main game   
         else
             if game.botMatch
-                p2.decision(); end
+                p2.decisionAdvanced(); end
 
             if  (p1.fire == 1) 
                 p1.fireAttempt(); p1.fire = 0; end

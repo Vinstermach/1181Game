@@ -210,12 +210,12 @@ classdef tank < handle
                 moveLeftWeight = moveLeftWeight + 5;
                 moveRightWeight = moveRightWeight + 5;
             end
-            if ~obj.bg.barriers(obj.y+1, obj.x)
+            if obj.bg.barriers(obj.y+1, obj.x)
                 moveLeftWeight = 0;
                 moveUpWeight = moveUpWeight + 5;
                 moveDownWeight = moveDownWeight + 5;
             end
-            if ~obj.bg.barriers(obj.y+1, obj.x+2)
+            if obj.bg.barriers(obj.y+1, obj.x+2)
                 moveRightWeight = 0;
                 moveUpWeight = moveUpWeight + 5;
                 moveDownWeight = moveDownWeight + 5;
@@ -223,6 +223,7 @@ classdef tank < handle
             
             tempAry = [moveUpWeight; moveDownWeight; moveLeftWeight; moveRightWeight];
             disp(tempAry);
+            
             [elem, indx] = max(tempAry);
             switch indx
                 case 1
