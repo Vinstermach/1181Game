@@ -173,7 +173,6 @@ classdef tank < handle
             
         end
         %==================================================================
-        
         function obj = decisionAdvanced(obj)
             moveUpWeight = 0;
             moveDownWeight = 0;
