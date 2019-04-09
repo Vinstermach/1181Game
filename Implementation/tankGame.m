@@ -31,7 +31,7 @@ function main()
         % main game   
         else
             if game.botMatch
-                p2.decision(); end
+                p2.decisionAdvanced(); end
 
             if  (p1.fire == 1) 
                 p1.fireAttempt(); p1.fire = 0; end
@@ -434,11 +434,11 @@ function pauseScreen()
                 case 0
                     web('http://boards.4channel.org/a/');
                 case 1
-                    web('https://stackoverflow.com/');
+                    web('https://www.reddit.com/r/popular/');
                 case 2
                     web('https://www.apple.com/');
                 case 3
-                    web('https://store.steampowered.com/');
+                    web('https://www.youtube.com/watch?v=ZZ5LpwO-An4');
             end
             game.pause.decided = 0;
         end

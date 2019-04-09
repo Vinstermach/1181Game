@@ -181,13 +181,13 @@ classdef tank < handle
             moveRightWeight = 0;
             
             if (obj.opponent.x > obj.x)
-                moveRightWeight = moveRightWeight + 5;
+                moveRightWeight = moveRightWeight + obj.opponent.x - obj.x;
             elseif (obj.opponent.x < obj.x)
-                moveLeftWeight = moveLeftWeight + 5;
+                moveLeftWeight = moveLeftWeight + obj.x - obj.opponent.x ;
             elseif (obj.opponent.y > obj.y)
-                moveUpWeight = moveUpWeight + 5;
+                moveUpWeight = moveUpWeight + obj.opponent.y - obj.y;
             elseif (obj.opponent.y < obj.y)
-                moveDownWeight = moveDownWeight + 5;
+                moveDownWeight = moveDownWeight + obj.y - obj.opponent.y;
             end  
             
             % plus random weight
@@ -201,6 +201,19 @@ classdef tank < handle
             moveDownWeight = moveDownWeight * ~obj.bg.barriers(obj.y, obj.x+1);
             moveLeftWeight = moveLeftWeight * ~obj.bg.barriers(obj.y+1, obj.x);
             moveRightWeight = moveRightWeight * ~obj.bg.barriers(obj.y+1, obj.x+2);
+            
+            tempAry = [moveUpWeight; moveDownWeight; moveLeftWeight; moveRightWeight];
+            [elem, indx] = max(tempAry);
+            switch indx
+                case 1
+                    obj.move("up");
+                case 2
+                    obj.move("down");
+                case 3
+                    obj.move("left");
+                case 4
+                    obj.move("right");
+            end
             
             % shoot if the player is ahead
             if (obj.x == obj.opponent.x)
@@ -217,6 +230,7 @@ classdef tank < handle
                     obj.fireAttempt();
                 end
             end
+            
         end
     end
         
