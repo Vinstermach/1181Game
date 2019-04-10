@@ -10,7 +10,7 @@ function main()
     global game;
     global bg; global p1; global p2;
     % create instances: 
-    bg = background(16, 32); %unmber of units, pixel per unit
+    bg = background(16, 32, true); %unmber of units, pixel per unit
     p1 = tank(bg.scale - 2, bg.scale - 2, 'resources\tank1.png', bg); % arrow control
     p2 = tank(1, 1, 'resources\tank2.png', bg); % wasd control 
     init(); % initlizing parameters
@@ -61,14 +61,13 @@ function main()
                 game.p1Streak = 0;
                 game.p2Streak = game.p2Streak + 1;
                 game.totalKill = game.totalKill + 1;
-                if (game.lastWinner == "p2" || game.lastWinner == "null")
-                    if (game.p2Streak == 1 && game.firstBloodTaken == 0)
-                        play(game.firstBloodSound)
-                    elseif (game.p2Streak == 2)
-                        play(game.doubleKillSound)
-                    elseif (game.p2Streak == 3)
-                        play(game.dominatingSound)
-                    end
+                if (game.p2Streak == 1 && game.firstBloodTaken == 0)
+                    play(game.firstBloodSound);
+                    game.firstBloodTaken = 1;
+                elseif (game.p2Streak == 2)
+                    play(game.doubleKillSound);
+                elseif (game.p2Streak == 3)
+                    play(game.dominatingSound);
                 end
                 game.lastWinner = "p2";
                 respawn(p1, false);
@@ -77,14 +76,13 @@ function main()
                 game.p2Streak = 0;
                 game.p1Streak = game.p1Streak + 1;
                 game.totalKill = game.totalKill + 1;
-                if (game.lastWinner == "p1"  || game.lastWinner == "null")
-                    if (game.p1Streak == 1 && game.firstBloodTaken == 0)
-                        play(game.firstBloodSound)
-                    elseif (game.p1Streak == 2)
-                        play(game.doubleKillSound)
-                    elseif (game.p1Streak == 3)
-                        play(game.dominatingSound)
-                    end
+                if (game.p1Streak == 1 && game.firstBloodTaken == 0)
+                    play(game.firstBloodSound);
+                    game.firstBloodTaken = 1;
+                elseif (game.p1Streak == 2)
+                    play(game.doubleKillSound);
+                elseif (game.p1Streak == 3)
+                    play(game.dominatingSound);
                 end
                 game.lastWinner = "p1";
                 respawn(p2, false);
@@ -108,18 +106,23 @@ function init()
     global p1; global p2;
     p1.dir = "up"; p2.dir = "down";  % initial direction
     p1.opponent = p2; p2.opponent = p1; 
-    p1.shells.color = 'r';
-    p2.shells.color = 'g';
+    p1.shells.color = 'r';           % color of p1's bullet
+    p2.shells.color = 'g';           % color of p2's bullet
+    p1.loadSoundFX('resources\soundFX\shoot1.mp3', ...
+        'resources\soundFX\hit1.mp3', 'resources\soundFX\resp1.mp3');
+    p2.loadSoundFX('resources\soundFX\shoot2.mp3', ...
+        'resources\soundFX\hit2.mp3', 'resources\soundFX\resp2.mp3');
     
     game.on = true;    
     game.showHelp = 0;
     game.botMatch = 0;               % place holder for bot status
-    game.firstBloodTaken = 0;
+    game.instractorMode = 0;         % E rated content if `true`
+    game.firstBloodTaken = 0;        % avoid multi-firstblood
     game.UI = figure('menubar','none',...
                'numbertitle','off'); % cancel menu bar
     game.lastWinner = "null";        % for recording kill streak
-    game.p1Streak = 0;
-    game.p2Streak = 0;
+    game.p1Streak = 0;               % kill streak of p1
+    game.p2Streak = 0;               % kill streak of p2
     game.totalKill = 0;
     game.firstBlood = flip(imread('resources\firstBlood.png'));
     game.doubleKill = flip(imread('resources\doubleKill.png'));
@@ -131,12 +134,12 @@ function init()
     game.dominatingSound = audioplayer(audioread( ...
         'resources\killSound\dominatingStd.mp3'), 44100);
     
-    game.ending.index = 0;
-    game.ending.in = 0;
+    game.ending.index = 0;          % selection index in ending screen
+    game.ending.in = 0;             % whether user makes the decision
     game.pause.pauseImg = flip(imread('resources\helpScreen.png'));
-    game.pause.decided = 0;
-    game.pause.index = 0;
-    game.pause.in = 0;
+    game.pause.decided = 0;         % whether user makes the decision
+    game.pause.index = 0;           % selection index in pause screen
+    game.pause.in = 0;              % whether it's still pause
     
     
     game.offsetX = bg.mLength + 16;
@@ -242,21 +245,25 @@ function checkBullets(pp1, pp2)
                     % and elminate that bullet
                     pp2.health = pp2.health - 1;
                     pp1.shells.listOfBul(i) = [];
+                    play(pp2.gotHitFX);
                 end
             case "down"
                 if (xDist == 0) && (yDist == 0 || yDist == -1)
                     pp2.health = pp2.health - 1;
                     pp1.shells.listOfBul(i) = [];
+                    play(pp2.gotHitFX);
                 end
             case "left"
                 if (xDist == 0 || xDist == -1) && (yDist == 0)
                     pp2.health = pp2.health - 1;
                     pp1.shells.listOfBul(i) = [];
+                    play(pp2.gotHitFX);
                 end
             case "right"
                 if (xDist == 0 || xDist == 1) && (yDist == 0)
                     pp2.health = pp2.health - 1;
                     pp1.shells.listOfBul(i) = [];
+                    play(pp2.gotHitFX);
                 end
         end
     end
@@ -306,6 +313,7 @@ function respawn(player, resetLife)
     player.x = player.birthX;
     player.y = player.birthY;
     player.lifes = player.lifes - 1;
+    play(player.dieFX);
     if resetLife
         player.lifes = 3; end
 end
@@ -318,31 +326,31 @@ function scoreBoardUpdate()
     p2Health = int2str(p2.health);
     switch game.p1Streak
         case 0 
-            p1Streak = 0;
+            p1StreakImg = 0;
         case 1 
             if game.totalKill == 1
-                p1Streak = game.firstBlood;
+                p1StreakImg = game.firstBlood;
             else
-                p1Streak = 0;
+                p1StreakImg = 0;
             end
         case 2
-            p1Streak = game.doubleKill;
+            p1StreakImg = game.doubleKill;
         otherwise
-            p1Streak = game.dominating;
+            p1StreakImg = game.dominating;
     end
     switch game.p2Streak
         case 0 
-            p2Streak = 0;
+            p2StreakImg = 0;
         case 1 
             if game.totalKill == 1
-                p2Streak = game.firstBlood;
+                p2StreakImg = game.firstBlood;
             else
-                p2Streak = 0;
+                p2StreakImg = 0;
             end
         case 2
-            p2Streak = game.doubleKill;
+            p2StreakImg = game.doubleKill;
         otherwise
-            p2Streak = game.dominating;
+            p2StreakImg = game.dominating;
     end
 
     imagesc(bg.mLength, 0, bg.scoreBoard);
@@ -356,7 +364,7 @@ function scoreBoardUpdate()
         imgLocX = imgLocX + bg.multiplier;
     end
     text(game.offsetX, game.offsetY(6), ['  HP:   ' p1Health], 'color', 'white')
-    imagesc(game.offsetX, game.offsetY(7) - 16, p1Streak);
+    imagesc(game.offsetX, game.offsetY(7) - 16, p1StreakImg);
 
     % player two info
     text(game.offsetX, game.offsetY(10), 'Player 2:', 'color', 'white');
@@ -367,7 +375,7 @@ function scoreBoardUpdate()
         imgLocX = imgLocX + bg.multiplier;
     end
     text(game.offsetX, game.offsetY(12), ['  HP:   ' p2Health], 'color', 'white')
-    imagesc(game.offsetX, game.offsetY(13) - 16, p2Streak);
+    imagesc(game.offsetX, game.offsetY(13) - 16, p2StreakImg);
  
 end
 
@@ -379,7 +387,6 @@ function ending()
     game.ending.decided = 0;
     
     % decide what to say based on who wins
-    instractorMode = 1;
     finalImg = bg.p1Win;
     if game.botMatch % if bot wins
         if p1.lifes == 0
@@ -387,7 +394,7 @@ function ending()
                 case 1
                     finalImg = bg.aiWin1;
                 case 2
-                    if ~instractorMode
+                    if ~game.instractorMode
                         finalImg = bg.aiWin2;
                     else
                         finalImg = bg.aiWin1;
@@ -468,7 +475,6 @@ function pauseScreen()
                 case 2
                     web('https://www.apple.com/');
                 case 3
-                    %web('https://www.youtube.com/watch?v=3H6amDbAwlY');
                     bg.getMusic('resources\musics\tequila.mp3');
                     play(bg.music);
             end

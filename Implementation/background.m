@@ -3,6 +3,9 @@ classdef background < handle
         scale;       % number of units 
         multiplier;  % the pixel of each unit 
         mLength;
+        
+        punkMode;
+        
         grassImg;
         brickImg;
         instrImg;    % image ised in loading screen
@@ -27,16 +30,29 @@ classdef background < handle
     end
     
     methods
-        function obj = background(Scale, Multiplier) %init
-            
+        function obj = background(Scale, Multiplier, punk) %init
+            ary = {'resources\musics\nyan.mp3',...
+                'resources\musics\red.mp3',...
+                'resources\musics\PFUDOR.mp3',...
+                'resources\musics\shooting.mp3'};
+            aryPunk = {'resources\musics\halo.mp3',...
+                'resources\musics\doom.mp3'};
+            obj.punkMode = punk;
             obj.grassAlt = zeros(16, 16, 3);
             obj.brickAlt = [];
             obj.scale = Scale;
             obj.multiplier = Multiplier;
             obj.mLength = obj.scale * obj.multiplier;
             obj.extraLen = 6;
-            obj.grassImg = flip(imread('resources\Grass.png'));
-            obj.brickImg = imread('resources\bricks.png');
+            if obj.punkMode
+                obj.grassImg = flip(imread('resources\GrassP.png'));
+                obj.brickImg = imread('resources\bricksP.png');
+                obj.getMusic(char(aryPunk(randi([1, 2]))));
+            else
+                obj.grassImg = flip(imread('resources\Grass.png'));
+                obj.brickImg = imread('resources\bricks.png');
+                obj.getMusic(char(ary(randi([1, 4]))));
+            end
             obj.scoreBoard = flip(imread('resources\scoreBoard.png'));
             obj.instrImg = flip(imread('resources\scoreBoardInst.png'));
             obj.p1Win = flip(imread('resources\wins\player1.png'));
@@ -47,7 +63,6 @@ classdef background < handle
             obj.readArray();
             obj.resetMap();
             obj.generateImage();
-            obj.getMusic('resources\musics\red.mp3');
         end
         %=================================================================
         function obj = generateImage(obj)

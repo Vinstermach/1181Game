@@ -3,8 +3,16 @@
 score = [9, 9, 5, 5, 4, 4, 5, 0, 6, 6, 7, 7, 8, 8, 9, 0,  ...
     5, 5, 6, 6, 7, 7, 8, 0, 5, 5, 6, 6, 7, 7, 8, 0, ...
     9, 9, 6, 6, 5, 5, 6, 0, 7, 7, 8, 8, 9, 9, 10];
-timer();
+aryRd();
 
+function aryRd()
+    ary = ["resources\musics\nyan.mp3", "resources\musics\red.mp3",...
+        "resources\musics\tequila.mp3"];
+    test = audioread(ary(1));
+    muse = audioplayer(test, 44100);
+    play(muse);
+
+end
 function timer()
     [y,Fs] = audioread('resources\test.mp3'); % y samples from audio with Fs sampling frequency in [Hz].
     sound(y,Fs);% listen your audio input

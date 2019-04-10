@@ -26,6 +26,10 @@ classdef tank < handle
         inMapY;
         x;           % relative coordintes in the plot
         y;
+        
+        gotHitFX;
+        shootFX;
+        dieFX;
     end
     
     methods
@@ -79,6 +83,7 @@ classdef tank < handle
                 obj.countDown = obj.fireCD; % reset cooldown
                 newBullet = bullet(obj.dir, obj.x, obj.y);
                 obj.shells.listOfBul = [obj.shells.listOfBul, newBullet];
+                play(obj.shootFX);
             end
         end
         %==================================================================
@@ -183,8 +188,8 @@ classdef tank < handle
                 dist = 2 * (obj.opponent.x - obj.x);
                 moveRightWeight = moveRightWeight + dist;
             elseif (obj.opponent.x < obj.x)
-                dist = 3 * (obj.x - obj.opponent.x)
-                moveLeftWeight = moveLeftWeight + dist
+                dist = 3 * (obj.x - obj.opponent.x);
+                moveLeftWeight = moveLeftWeight + dist;
             elseif (obj.opponent.y > obj.y)
                 dist = 2 * (obj.opponent.y - obj.y);
                 moveUpWeight = moveUpWeight + dist;
@@ -222,7 +227,6 @@ classdef tank < handle
             end      
             
             tempAry = [moveUpWeight; moveDownWeight; moveLeftWeight; moveRightWeight];
-            disp(tempAry);
             
             [elem, indx] = max(tempAry);
             switch indx
@@ -252,6 +256,15 @@ classdef tank < handle
                 end
             end
             
+        end
+        %==================================================================
+        function obj = loadSoundFX(obj, shootPath, gotHitPath, diePath)
+            shootSoundRaw = audioread(shootPath)/4;
+            gotHitSoundRaw = audioread(gotHitPath)/2;
+            dieSoundRaw = audioread(diePath)/2;
+            obj.shootFX = audioplayer(shootSoundRaw, 44100);
+            obj.gotHitFX = audioplayer(gotHitSoundRaw, 44100);
+            obj.dieFX = audioplayer(dieSoundRaw, 44100);
         end
     end
         
