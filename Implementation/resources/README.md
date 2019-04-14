@@ -102,4 +102,20 @@ Whenever the user hit `Enter`, it reads current selection and does corresponding
 Some resets the music, others open external links.   
 If the player hits `P` again, the while loop would break and back to `main()`.
 
+## `bullet.m` ##
+This file is the class definition for `bullet`.   
+
+* Function `bullet(Direction, StartX, StartY)` creates a new bullet, recording its initial position and direction. 
+
+## `bullets.m` ##
+This file is the class definition for `bullets`, which is a collection of class `bullet`. 
+
+* Function `bullets(effectiveRange)` intilize the object. With the only input parameter `effectiveRange` determines the range inside which the bullet is considered effective. 
+
+* Function `updateBullets(obj)` examines thestatus of bullets.   
+It first iterate through all bullets in the collection by a `for` loop. If the bullet's moving direction has no wall, 
+then move the bullet 1 unit; otherwise delete that bullet. repeat that process twice so the bullet moves faster than tank.   
+Then it multiplies the corrdinates by the pixel ratio, so the bullets can be plotted correctly. 
+
+
 
